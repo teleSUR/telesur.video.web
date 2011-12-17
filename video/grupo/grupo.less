@@ -1,0 +1,47 @@
+/* @rojo1 = #b40300; */
+
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.video_grupo {
+    min-height: 165px;
+    display: none;
+
+    &.cargando {
+        background: url(../resources/img/ajax_load.gif) no-repeat center;
+    }
+
+    .cabeza {
+        background-color: #b40300;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        clear: both;
+    }
+
+    .clips_wrapper {
+        overflow: hidden;
+
+        .clips {
+            min-height: 165px;
+            overflow: hidden;
+        }
+    }
+
+    .mas_clips {
+        display: none;
+        text-align: center;
+        clear: both;
+        height: 15px;
+        border: 1px solid white;
+        background: black;
+        width: 150px;
+        margin: 0 auto;
+        margin-bottom: 1em;
+        .redondeado;
+
+    }
+}

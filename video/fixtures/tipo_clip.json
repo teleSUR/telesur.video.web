@@ -1,0 +1,37 @@
+[
+    {
+        "descripcion": "",
+        "nombre": "Entrevista",
+        "orden": 2,
+        "slug": "entrevista",
+        "nombre_plural": "Entrevistas"
+    },
+    {
+        "descripcion": "",
+        "nombre": "Reportaje",
+        "orden": 3,
+        "slug": "reportaje",
+        "nombre_plural": "Reportajes"
+    },
+    {
+        "descripcion": "",
+        "nombre": "Programa",
+        "orden": 4,
+        "slug": "programa",
+        "nombre_plural": "Programas"
+    },
+    {
+        "descripcion": "",
+        "nombre": "Documental",
+        "orden": 5,
+        "slug": "documental",
+        "nombre_plural": "Documentales"
+    },
+    {
+        "descripcion": "",
+        "nombre": "Noticia",
+        "orden": 99,
+        "slug": "noticia",
+        "nombre_plural": "Noticias"
+    }
+]

@@ -1,0 +1,39 @@
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.video_navegador {
+    width: 600px;
+
+    .menu_modos {
+        background: url(../resources/img/fondo_menu_modos.png);
+        border-bottom: 1px solid black;
+        height: 30px;
+        font-size: 1.2em;
+        text-align: center;
+
+        a {
+            float: left;
+            .redondeado;
+            border: 1px solid white;
+            margin: 4px 0 0 10px;
+            padding: 1px 5px;
+        }
+
+        a.activo {
+            background-color: #000;
+        }
+
+        .cambiar_modo {
+            font-size: 0.85em;
+            float: right;
+        }
+    }
+
+    .mas_grupos {
+        display: none;
+        font-size: 2em;
+    }
+}

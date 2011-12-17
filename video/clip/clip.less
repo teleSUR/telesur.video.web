@@ -1,0 +1,51 @@
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.opacity(@op:100)
+{
+    filter:alpha(opacity=@op);
+    -moz-opacity:@op/100;
+    -khtml-opacity:@op/100;
+    opacity:@op/100;
+}
+
+.video_clip {
+    width: 175px;
+    height: 155px;
+    padding: 10px 10px 0 10px;
+    float: left;
+    .opacity(80);
+    position: relative;
+
+    img {
+        .opacity(70);
+        cursor: pointer;
+    }
+
+    .duracion {
+        position: absolute;
+        top: 85px;
+        right: 15px;
+        font-size: 0.90em;
+        background: black;
+        padding: 3px;
+        border: 1px solid #666;
+        .redondeado(4px);
+        .opacity(65);
+    }
+
+    &.cargando {
+        background: url(../resources/img/ajax_load.gif) no-repeat center 40px;
+    }
+    &.seleccionado {
+        background-color: #202020;
+        .opacity(100);
+
+        img {
+            .opacity(100);
+        }
+    }
+}
