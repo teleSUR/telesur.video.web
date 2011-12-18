@@ -1,3 +1,4 @@
+steal('steal/less').then('./player.less');
 steal({src: '../resources/mediaplayer/jwplayer.js', packaged: false})
 
 .then( 'jquery/controller','jquery/view/ejs')
@@ -9,78 +10,77 @@ steal({src: '../resources/mediaplayer/jwplayer.js', packaged: false})
 $.Controller('Video.Player',
 /** @Static */
 {
-	defaults : {}
+	defaults : {
+        player_swf_src: 'resources/mediaplayer/player.swf',
+        player_skin_src: 'resources/mediaplayer/skins/glow/glow.zip',
+        player_width: 350,
+        player_height: 230
+    }
 },
 /** @Prototype */
 {
-    clip: null,
-
+    /**
+     * inicializa controlador para player
+     */
 	init : function(){
 		steal.dev.log('inicializando controlador Player');
+
+        // cargar HTML
         this.element.html("//video/player/views/init.ejs", {});
 
+        // inicializar player
 		jwplayer('mediaplayer').setup({
+            'skin': this.options.player_skin_src,
+            'width': this.options.player_width,
+            'height': this.options.player_height,
+            'controlbar': 'bottom',
+            'wmode': 'window',
             'modes': [
                 {
                     type: 'flash',
-                    src: 'resources/mediaplayer/player.swf',
-                    config: {
-                        //'file': 'http://media.tlsur.net/clips/telesur-video-2011-11-11-142226304176.mp4',
-                        'provider': 'rtmp'
-                        //'http.startparam': 'start'
-                        //'streamer': 'start'
-                    }
-
+                    src: this.options.player_swf_src,
+                    config: { 'provider': 'rtmp' }
                 },
                 {
                     type: 'html5',
-                    config: {
-                       // 'file': 'http://media.tlsur.net/clips/telesur-video-2011-11-11-142226304176.mp4'
-                    }
+                    config: { }
                 },
                 {
                     type: 'download',
-                    config: {
-                       //'file': 'http://media.tlsur.net/clips/telesur-video-2011-11-11-142226304176.mp4?descarga',
-                       //'provider': 'video'
-                    }
+                    config: { }
                 }
-            ],
-            'skin': 'resources/mediaplayer/skins/glow/glow.zip',
-
-		   // 'controlbar': 'bottom',
-            //'file': 'http://media.tlsur.net/clips/telesur-video-2011-11-11-142226304176.mp4',
-		    'width': '350',
-		    'height': '230',
-            'controlbar': 'bottom'
-        	//'wmode': 'window'
+            ]
 		});
 	},
 
+    /**
+     * Reproduce en clip especificado en el player
+     * Si actualmente se está reproduciendo el mismo clip, sólo se pausa/despausa
+     *
+     * @param clip
+     */
     cambiarClip: function(clip) {
-
+        // si se intenta cambiar al mismo clip, sólo pausar/despausar
         if (this.clip && this.clip == clip) {
-            jwplayer().pause()
-                return;
+            return jwplayer().pause();
         }
 
+        // cambiar a nuevo clip
         this.clip = clip;
 
-        switch (this.clip.metodo_preferido) {
-            case 'streaming':
-                jwplayer().load({file: this.clip.streaming.rtmp_file, streamer: this.clip.streaming.rtmp_server, 'rtmp.subscribe': true}).play();
-                break;
-            case 'http':
-                jwplayer().load({file: this.clip.archivo_url}).play();
-                break;
+        // actualizar HTML con datos del clip
+        this.element.find('.titulo').html(clip.descripcion);
+
+        // determinar parámetros para player
+        var options = { image: this.clip.thumbnail_mediano };
+        if (this.clip.metodo_preferido == 'streaming') {
+            options = $.extend(options, { file: clip.streaming.rtmp_file, streamer: clip.streaming.rtmp_server, 'rtmp.subscribe': true });
+        } else {
+            options = $.extend(options, { file: clip.archivo_url });
         }
 
-        this.element.find('#mediaplayer-titulo').html(this.clip.descripcion);
-
-        //this.element.find('#mediaplayer').animate({width: '600px'});
-        this.element.find('#mediaplayer').height = '400px;';
-        this.element.find('#mediaplayer').width = '400px;';
-        //document.getElementById("mediaplayer").height = '400px';
+        // cargar clip en player
+        jwplayer().load(options).play();
     }
 })
 
