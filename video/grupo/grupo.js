@@ -50,8 +50,7 @@ $.Controller('Video.Grupo',
         },
 
 		this.element.html("//video/grupo/views/init.ejs", {});
-
-        //this.element.children().show();
+        this.element.find('.paginacion').hide();
 
         // inicializar objeto de objeto de parámetros
         this.params = $.extend(this.options.params, this.constructor.paramsDefault);
@@ -65,10 +64,47 @@ $.Controller('Video.Grupo',
         this.solicitarClips();
 	},
 
-    'div.mas_clips a click' : function(el, ev) {
+    'a.mas click' : function(el, ev) {
         ev.preventDefault();
         this.mostrarMas();
 
+    },
+
+    'a.menos click' : function(el, ev) {
+        ev.preventDefault();
+        this.mostrarMenos();
+
+    },
+
+    mostrarMenos : function() {
+        var clips = this.element.find('.clips');
+
+        var clips_mostrados = this.element.find('.clips').slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
+
+        if (this.paginacion.numFilasMostradas >= this.constructor.numFilasMaximo) {
+            // en número máximo de filas
+            clips.animate({'margin-top': '+=165px', height:'-=165px'}, function() {
+            });
+        } else {
+            // todavía no se alcanza el número máximo de filas
+//
+//            this.paginacion.numFilasMostradas++;
+//            this.paginacion.primeroMostrado += this.constructor.numClipsPorFila;
+//            clips.animate({height:'+=165px'}, 'fast');
+        }
+
+
+//        this.paginacion.ultimoMostrado -= this.constructor.numClipsPorFila;
+//        this.paginacion.primeroMostrado -= this.constructor.numClipsPorFila;
+//
+//        this.paginacion.primeroConsultado = this.paginacion.primeroMostrado - (this.constructor.numFilasCache * this.constructor.numClipsPorFila);
+//        this.paginacion.ultimoConsultado = this.paginacion.ultimoMostrado + (this.constructor.numFilasCache * this.constructor.numClipsPorFila);
+//
+//        if (this.enFinal) { // puede que haya más clips
+//            this.element.find('.mas').hide('slide');
+//        } else { // puede que haya más clips // ya no habrá más clips
+//            this.solicitarClips();
+//        }
     },
 
     mostrarMas : function() {
@@ -76,14 +112,16 @@ $.Controller('Video.Grupo',
 
         var clips_mostrados = this.element.find('.clips').slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
 
-        // todavía no se alcanza el número máximo de filas
         if (this.paginacion.numFilasMostradas >= this.constructor.numFilasMaximo) {
-            this.paginacion.primeroMostrado += this.constructor.numClipsPorFila;
-            clips.animate({'margin-top': '-=165px', height:'+=165px'});
-        }
-        // en número máximo de filas
-        else {
+            // en número máximo de filas
+            var menos_link = this.element.find('.menos');
+            clips.animate({'margin-top': '-=165px', height:'+=165px'}, function() {
+                menos_link.show();
+            });
+        } else {
+            // todavía no se alcanza el número máximo de filas
             this.paginacion.numFilasMostradas++;
+            this.paginacion.primeroMostrado += this.constructor.numClipsPorFila;
             clips.animate({height:'+=165px'}, 'fast');
         }
 
@@ -93,15 +131,11 @@ $.Controller('Video.Grupo',
         this.paginacion.primeroConsultado = this.paginacion.ultimoMostrado + 1;
         this.paginacion.ultimoConsultado = this.paginacion.ultimoMostrado + (this.constructor.numFilasCache * this.constructor.numClipsPorFila);
 
-        // puede haber más clips para mostrar
-        if (!this.enFinal) {
+        if (this.enFinal) { // puede que haya más clips
+            this.element.find('.mas').hide('slide');
+        } else { // puede que haya más clips // ya no habrá más clips
             this.solicitarClips();
         }
-        // no van a haber más clips
-        else {
-            this.element.find('.mas_clips').hide('slide');
-        }
-
     },
 
     solicitarClips : function() {
@@ -142,7 +176,7 @@ $.Controller('Video.Grupo',
 
                     // número esperado de clips recibidos, puede que todavía haya otra página, mostrar botón
                     if (clips.length >= this.constructor.numClipsPorFila) {
-                        this.element.find('.mas_clips').slideDown();
+                        this.element.find('.mas').slideDown();
                     }
 
                     this.avanzarCache();
@@ -153,7 +187,7 @@ $.Controller('Video.Grupo',
                     $('#navegador').controller().mostrarMasGrupos(1);
                 } else {
                     // se acabaron los clips para este grupo, pero sí hubo alguno
-                    this.element.find('.mas_clips').slideUp();
+                    this.element.find('.mas').slideUp();
                 }
             }
         }

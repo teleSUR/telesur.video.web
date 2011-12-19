@@ -14,6 +14,10 @@
         background: url(../resources/img/ajax_load.gif) no-repeat center;
     }
 
+    &:hover {
+       /* border: 1px solid #b40300; */
+    }
+
     .cabeza {
         background-color: #b40300;
         height: 20px;
@@ -31,17 +35,26 @@
         }
     }
 
-    .mas_clips {
-        display: none;
+    a.paginacion {
+        display: block;
+        cursor: pointer;
         text-align: center;
         clear: both;
-        height: 15px;
-        border: 1px solid white;
+        height: 10px;
+        font-size: 9px;
+        border: 1px solid #808080;
+        color: white;
         background: black;
-        width: 150px;
-        margin: 0 auto;
-        margin-bottom: 1em;
+        width: 300px;
+        margin: 5px auto;
         .redondeado;
 
+        &:hover {
+            background: grey;
+            color: black;
+        }
     }
+
+
+
 }
