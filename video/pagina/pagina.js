@@ -1,8 +1,8 @@
-steal('jquery/dom/route');
-steal('steal/less').then('./pagina.less');
-steal('video/navegador', 'video/player');
+steal('jquery/dom/route')
+.then('steal/less').then('./pagina.less')
+.then('video/navegador', 'video/player')
 
-steal('jquery/controller','jquery/view/ejs')
+.then('jquery/controller','jquery/view/ejs')
     .then('./views/init.ejs', function($) {
 /**
  * @class Video.Pagina

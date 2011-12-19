@@ -1,10 +1,10 @@
 // Estilos
-steal('steal/less').then('./navegador.less');
+steal('steal/less').then('./navegador.less')
 
-steal('video/grupo');
+.then('video/grupo')
 
 // Controlador
-steal('jquery/controller','jquery/view/ejs')
+.then('jquery/controller','jquery/view/ejs')
 	.then( './views/init.ejs', function($) {
 
 /**
