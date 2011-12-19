@@ -16,8 +16,8 @@ $.Controller('Video.Navegador',
 	defaults : {
     },
     modos: {
-        'noticia': ['secciones', 'fechas', 'programa', 'populares'],
-        'entrevista': ['secciones', 'fechas', 'programa', 'populares'],
+        'noticia': ['secciones', 'regiones', 'fechas', 'programa', 'populares'],
+        'entrevista': ['secciones', 'regiones', 'fechas', 'programa', 'populares'],
         'programa': ['programa', 'fechas'],
         'documental': ['fechas'],
         'reportaje': ['fechas']
@@ -38,8 +38,20 @@ $.Controller('Video.Navegador',
 /** @Prototype */
 {
 	init : function() {
-        // establecer tipo de clip, ya sea con instancia de modelo o nombre
         steal.dev.log('Inicializando Video.Navegador para tipo: ' + this.options.tipo_clip.slug);
+        this.element.html("//video/navegador/views/init.ejs", {});
+
+        // detectar cuando el scroll llega al final
+        // para cargar más grupos automáticamente
+        var that = this;
+        $(window).scroll(function(){
+            if  ($(window).scrollTop() == $(document).height() - $(window).height()){
+                if (that) {
+                    that.element.find('.mas_grupos').addClass('cargando');
+                    that.mostrarMasGrupos();
+                }
+            }
+        });
 
         this.paginacion = {
             primeroMostrado: 1,
@@ -51,12 +63,8 @@ $.Controller('Video.Navegador',
         $.route(':tipo/:modo');
         $.route.delegate('modo', 'set', this.callback('modoSeleccionado'));
         //$.route.delegate('modo', 'remove', this.callback('modoSeleccionado')); // TODO: con esto se cargaba doble al cambiar de tipo, porque lanzaba dos eventos, primero al quitar modo y después al poner el nuevo default
-
 //        $.route.delegate('tipo', 'set', this.callback('tipoSeleccionado'));
 //        $.route.delegate('tipo', 'remove', this.callback('tipoSeleccionado'));
-
-        this.element.html("//video/navegador/views/init.ejs", {});
-
 
         this.cambiarTipo(this.options.tipo_clip);
 	},
@@ -73,7 +81,7 @@ $.Controller('Video.Navegador',
         menu_modos.empty();
         $.each(this.constructor.modos[tipo_clip.slug], function(i, modo) {
             $('<a>').attr('href', $.route.url({'tipo': tipo_clip.slug, 'modo': modo}))
-                .html('modo ' + modo)
+                .html('por ' + modo)
                 .addClass(modo)
                 .appendTo(menu_modos);
         });
@@ -144,7 +152,7 @@ $.Controller('Video.Navegador',
 
         var self = this;
         this.programas.each(function(i, programa){
-            steal.dev.log('por agregar nuevo grupo para' + programa.slug);
+            steal.dev.log('por agregar nuevo grupo para el progrma: ' + programa.slug);
             grupos_div.append($('<div>').model(programa).hide().video_grupo({
                 titulo: programa.nombre,
                 params: {
@@ -162,6 +170,26 @@ $.Controller('Video.Navegador',
 
     },
 
+    cargarModoRegiones : function() {
+        var regiones = ['america-latina', 'europa', 'asia', 'africa', 'oceania'];
+
+        var grupos_div = this.element.find('.grupos');
+
+        var self = this;
+        $.each(regiones, function(i, region){
+            steal.dev.log('por agregar nuevo grupo para la región: ' + region);
+            grupos_div.append($('<div>').hide().video_grupo({
+                titulo: region,
+                params: { tipo: self.options.tipo_clip.slug, region: region }
+            }));
+        });
+
+        // primer corrida
+        if (this.paginacion.ultimoMostrado == this.constructor.ultimoMostradoDefault ) {
+            this.element.find('.mas_grupos').show();
+            grupos_div.children().slice(0, this.paginacion.ultimoMostrado).trigger('show').show();
+        }
+    },
 
     cargarModoPopulares : function() {
         var tiempos = ['dia', 'semana_actual', 'mes_actual', 'ano_actual', 'ano_anterior'];
@@ -170,7 +198,7 @@ $.Controller('Video.Navegador',
 
         var self = this;
         $.each(tiempos, function(i, tiempo){
-            steal.dev.log('por agregar nuevo grupo para' + tiempo);
+            steal.dev.log('por agregar nuevo grupo para populares: ' + tiempo);
             grupos_div.append($('<div>').hide().video_grupo({
                 titulo: tiempo,
                 params: $.extend(self.constructor.fecha_params[tiempo], {
@@ -194,7 +222,7 @@ $.Controller('Video.Navegador',
 
         var self = this;
         $.each(fechas, function(i, fecha){
-            steal.dev.log('por agregar nuevo grupo para' + fecha);
+            steal.dev.log('por agregar nuevo grupo para fecha: ' + fecha);
             grupos_div.append($('<div>').hide().video_grupo({
                 titulo: fecha,
                 params: $.extend(self.constructor.fecha_params[fecha], {
@@ -220,7 +248,7 @@ $.Controller('Video.Navegador',
 
         var self = this;
         this.categorias.each(function(i, categoria){
-            steal.dev.log('por agregar nuevo grupo para' + categoria.slug);
+            steal.dev.log('por agregar nuevo grupo para categoría: ' + categoria.slug);
             grupos_div.append($('<div>').model(categoria).hide().video_grupo({
                 titulo: categoria.nombre,
                 params: {
@@ -250,7 +278,8 @@ $.Controller('Video.Navegador',
     },
 
     mostrarMasGrupos : function(num) {
-        if (!num) num = 0;
+        // default: agregar dos grupos extra
+        if (!num) num = 2;
         this.paginacion.ultimoMostrado += num;
 
         var grupos = this.element.find('.grupos').children();
@@ -282,6 +311,11 @@ $.Controller('Video.Navegador',
                 case 'fechas':
                     this.cargarModoFechas();
                     break;
+                case 'regiones':
+                    this.cargarModoRegiones();
+                    break;
+                default:
+                    steal.dev.warn('Modo no reconocido: ' + modo);
             }
         this.element.find('.menu_modos a.'+modo).addClass('activo').siblings().removeClass('activo');
         //}
