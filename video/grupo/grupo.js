@@ -23,7 +23,7 @@ $.Controller('Video.Grupo',
     numFilasMostradasDefault: 1,
 
     numFilasDefault: 1,
-    numFilasMaximo: 3,
+    numFilasMaximo: 2,
 
     primeroMostradoDefault: 1,
 
