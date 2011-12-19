@@ -13,8 +13,8 @@ $.Model('Video.Models.Categoria',
 	//findAll: "/api/categoria/"
     findAll : function(params, success, error) {
         return $.ajax({
-            url: location.href.match(/multimedia\.tlsur\.net/) ? '/api/categoria' : 'http://multimedia.tlsur.net/api/categoria/',
-            dataType: location.href.match(/multimedia\.tlsur\.net/) ? 'json' : 'jsonp categoria.models',
+            url:  Video.Models.VideoApi.isCrossDomain() ? 'http://multimedia.tlsur.net/api/categoria/' : '/api/categoria/',
+            dataType: (Video.Models.VideoApi.isCrossDomain() ? 'jsonp' : 'json') + ' categoria.models',
             data: params,
             success: success,
             error: [Video.Models.VideoApi.ajaxErrorFnc, error], tryCount: 0, retryLimit: 3

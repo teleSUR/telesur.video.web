@@ -13,8 +13,8 @@ $.Model('Video.Models.Programa',
     //findAll: "/api/programa/"
     findAll : function(params, success, error) {
         return $.ajax({
-            url: location.href.match(/multimedia\.tlsur\.net/) ? '/api/programa' : 'http://multimedia.tlsur.net/api/programa/',
-            dataType: location.href.match(/multimedia\.tlsur\.net/) ? 'json' : 'jsonp programa.models',
+            url:  Video.Models.VideoApi.isCrossDomain() ? 'http://multimedia.tlsur.net/api/programa/' : '/api/programa/',
+            dataType: (Video.Models.VideoApi.isCrossDomain() ? 'jsonp' : 'json') + ' programa.models',
             data: params,
             success: success,
             error: [Video.Models.VideoApi.ajaxErrorFnc, error], tryCount: 0, retryLimit: 3
