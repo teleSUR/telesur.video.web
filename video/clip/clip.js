@@ -32,6 +32,9 @@ $.Controller('Video.Clip',
 	'img click' : function(el, ev) {
         ev.preventDefault();
 
+        // cargar thumbnail de mejor calidad
+        $(el).attr('src', this.options.clip.thumbnail_mediano);
+
         this.clipSeleccionado();
 //        var vid_attr = $.route.attr('vid');
 //        if (vid_attr) {
