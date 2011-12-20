@@ -15,7 +15,7 @@ $.Controller('Video.Grupo',
     listensTo: ['show'],
 
     paramsDefault : {
-        detalle: 'normal'
+        detalle: 'basico'
     },
 
     numClipsPorFila: 3,
