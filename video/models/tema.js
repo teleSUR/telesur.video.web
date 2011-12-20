@@ -1,12 +1,12 @@
 steal('jquery/model', './api_model.js', function(){
 
 /**
- * @class Video.Models.Clip
+ * @class Video.Models.Tema
  * @parent index
  * @inherits Video.Models.ApiModel
- * Wraps backend clip services.
+ * Wraps backend tema services.
  */
-Video.Models.ApiModel('Video.Models.Clip',
+Video.Models.ApiModel('Video.Models.Tema',
     /* @Static */
     {
     },
