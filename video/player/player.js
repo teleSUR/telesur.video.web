@@ -69,7 +69,8 @@ $.Controller('Video.Player',
         this.clip = clip;
 
         // actualizar HTML con datos del clip
-        this.element.find('.titulo').html(clip.descripcion);
+        this.element.find('.titulo').html(clip.titulo);
+        this.element.find('.descripcion').html(clip.descripcion);
 
         // determinar parámetros para player
         var options = { image: this.clip.thumbnail_mediano };
