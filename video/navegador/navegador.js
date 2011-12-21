@@ -41,6 +41,13 @@ $.Controller('Video.Navegador',
         steal.dev.log('Inicializando Video.Navegador para tipo: ' + this.options.tipo_clip.slug);
         this.element.html("//video/navegador/views/init.ejs", {});
 
+        this.paginacion = {
+            primeroMostrado: 1,
+            ultimoMostrado: this.constructor.ultimoMostradoDefault
+        };
+
+        this.options.modo = $.route.attr("modo");
+
         // detectar cuando el scroll llega al final
         // para cargar más grupos automáticamente
         var that = this;
@@ -53,18 +60,10 @@ $.Controller('Video.Navegador',
             }
         });
 
-        this.paginacion = {
-            primeroMostrado: 1,
-            ultimoMostrado: this.constructor.ultimoMostradoDefault
-        };
+        // escuchar cambio de moodo en v2
+        $.route.delegate('v2', 'set', this.callback('modoSeleccionado'));
 
-        // rutas
-        //$.route.ready(false);
-        $.route(':tipo/:modo');
-        $.route.delegate('modo', 'set', this.callback('modoSeleccionado'));
-        //$.route.delegate('modo', 'remove', this.callback('modoSeleccionado')); // TODO: con esto se cargaba doble al cambiar de tipo, porque lanzaba dos eventos, primero al quitar modo y después al poner el nuevo default
-//        $.route.delegate('tipo', 'set', this.callback('tipoSeleccionado'));
-//        $.route.delegate('tipo', 'remove', this.callback('tipoSeleccionado'));
+        //$.route.delegate('v2', 'remove', this.callback('modoSeleccionado')); // TODO: con esto se cargaba doble al cambiar de tipo, porque lanzaba dos eventos, primero al quitar modo y después al poner el nuevo default
 
         this.cambiarTipo(this.options.tipo_clip);
 	},
@@ -80,7 +79,7 @@ $.Controller('Video.Navegador',
         // Consturir menú de modos
         menu_modos.empty();
         $.each(this.constructor.modos[tipo_clip.slug], function(i, modo) {
-            $('<a>').attr('href', $.route.url({'tipo': tipo_clip.slug, 'modo': modo}))
+            $('<a>').attr('href', $.route.url({vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}))
                 .html('por ' + modo)
                 .addClass(modo)
                 .appendTo(menu_modos);
@@ -89,14 +88,10 @@ $.Controller('Video.Navegador',
         // Si ya había un modo seleccionado, checar si el nuevo tipo soporta
         // el mismo modo, si no, cambiar el modo al default (el primero)
         var modos_disponibles = this.constructor.modos[tipo_clip.slug];
-        if (!$.route.attr('modo') || modos_disponibles.indexOf($.route.attr('modo')) == -1) {
-            //alert('no había' + $.route.attr('modo')); // ******************************************************************************************
-            $.route.attr('modo', modos_disponibles[0]);
-            //alert('no había' + $.route.attr('modo')); // ******************************************************************************************
-        }
+        var tipo_adecuado = (!this.options.modo || modos_disponibles.indexOf(this.options.modo) == -1) ? modos_disponibles[0] : this.options.modo;
 
-      //  $.route.attr('modo', this.options.modo);
-      //  this.cambiarModo();
+        // cambiar modo
+        $.route.attrs({vista : Video.Pagina.vistas.lista.nombre, v1 : tipo_clip.slug, v2: tipo_adecuado});
     },
 
     cargarModoSecciones : function() {
@@ -291,34 +286,38 @@ $.Controller('Video.Navegador',
     },
 
     modoSeleccionado : function(ev, modo, modo_anterior) {
-        //if (modo != modo_anterior) {
-            this.element.find('.grupos').empty();
-            this.paginacion = {
-                primeroMostrado: 1,
-                ultimoMostrado: this.constructor.ultimoMostradoDefault
-            };
 
-            switch (modo) {
-                case 'secciones':
-                    this.cargarModoSecciones();
-                    break;
-                case 'populares':
-                    this.cargarModoPopulares();
-                    break;
-                case 'programa':
-                    this.cargarModoProgramas();
-                    break;
-                case 'fechas':
-                    this.cargarModoFechas();
-                    break;
-                case 'regiones':
-                    this.cargarModoRegiones();
-                    break;
-                default:
-                    steal.dev.warn('Modo no reconocido: ' + modo);
-            }
         this.element.find('.menu_modos a.'+modo).addClass('activo').siblings().removeClass('activo');
-        //}
+        this.options.modo = modo;
+
+        this.element.find('.grupos').empty();
+        this.paginacion = {
+            primeroMostrado: 1,
+            ultimoMostrado: this.constructor.ultimoMostradoDefault
+        };
+
+
+
+
+        switch (modo) {
+            case 'secciones':
+                this.cargarModoSecciones();
+                break;
+            case 'populares':
+                this.cargarModoPopulares();
+                break;
+            case 'programa':
+                this.cargarModoProgramas();
+                break;
+            case 'fechas':
+                this.cargarModoFechas();
+                break;
+            case 'regiones':
+                this.cargarModoRegiones();
+                break;
+            default:
+                steal.dev.warn('Modo no reconocido: ' + modo);
+        }
     }
 
 

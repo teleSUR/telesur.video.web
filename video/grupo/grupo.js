@@ -1,8 +1,8 @@
-steal('steal/less').then('./grupo.less');
+steal('steal/less').then('./grupo.less')
 
-steal('video/clip');
+.then('video/clip')
 
-steal( 'jquery/controller','jquery/view/ejs' )
+.then('jquery/controller','jquery/view/ejs')
 	.then( './views/init.ejs', function($){
 /**
  * @class Video.Grupo
@@ -11,7 +11,6 @@ $.Controller('Video.Grupo',
 /** @Static */
 {
 	defaults : {},
-
     listensTo: ['show'],
 
     paramsDefault : {
@@ -21,10 +20,8 @@ $.Controller('Video.Grupo',
     numClipsPorFila: 3,
     numFilasCache: 1,
     numFilasMostradasDefault: 1,
-
     numFilasDefault: 1,
     numFilasMaximo: 2,
-
     primeroMostradoDefault: 1,
 
     init : function() {
@@ -47,39 +44,35 @@ $.Controller('Video.Grupo',
             primeroConsultado : this.constructor.primeroConsultadoDefault,
             ultimoConsultado : this.constructor.ultimoConsultadoDefault,
             numFilasMostradas : this.constructor.numFilasMostradasDefault
-        },
+        };
 
+        // inicializar HTML
 		this.element.html("//video/grupo/views/init.ejs", {});
         this.element.find('.paginacion').hide();
+        this.element.find('.cabeza').html(this.options.titulo);
+        this.element.find('.clips').css('height', '165px');
 
         // inicializar objeto de objeto de parámetros
         this.params = $.extend(this.options.params, this.constructor.paramsDefault);
 
-        // Observar cambvios en la paginación
-
-        this.element.find('.cabeza').html(this.options.titulo);
-
-        this.element.find('.clips').css('height', '165px');
-
+        // solicitar clips para este grupo
         this.solicitarClips();
 	},
 
     'a.mas click' : function(el, ev) {
         ev.preventDefault();
         this.mostrarMas();
-
     },
 
     'a.menos click' : function(el, ev) {
         ev.preventDefault();
         this.mostrarMenos();
-
     },
 
     mostrarMenos : function() {
         var clips = this.element.find('.clips');
 
-        var clips_mostrados = this.element.find('.clips').slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
+        var clips_mostrados = clips.slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
 
         if (this.paginacion.numFilasMostradas >= this.constructor.numFilasMaximo) {
             // en número máximo de filas
@@ -110,7 +103,7 @@ $.Controller('Video.Grupo',
     mostrarMas : function() {
         var clips = this.element.find('.clips');
 
-        var clips_mostrados = this.element.find('.clips').slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
+        var clips_mostrados = clips.slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
 
         if (this.paginacion.numFilasMostradas >= this.constructor.numFilasMaximo) {
             // en número máximo de filas
@@ -150,7 +143,6 @@ $.Controller('Video.Grupo',
             steal.dev.log('clips solicitados NO en primer consulta, avanzando cache');
             this.avanzarCache();
         }
-
     },
 
     clipsRecibidos : function(clips) {
@@ -174,8 +166,8 @@ $.Controller('Video.Grupo',
                     this.paginacion.primeroMostrado == this.constructor.primeroMostradoDefault) {
                     steal.dev.log('clips recibidos en primer consulta, avanzando cache');
 
-                    // número esperado de clips recibidos, puede que todavía haya otra página, mostrar botón
                     if (clips.length >= this.constructor.numClipsPorFila) {
+                        // número esperado de clips recibidos, puede que todavía haya otra página, mostrar botón
                         this.element.find('.mas').slideDown();
                     }
 

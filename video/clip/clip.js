@@ -9,18 +9,30 @@ steal( 'jquery/controller','jquery/view/ejs', 'jquery/dom/route' )
 $.Controller('Video.Clip',
 /** @Static */
 {
-	defaults : {}
+	defaults : {
+        clip : null
+    }
 },
 /** @Prototype */
 {
 	init : function(){
         this.element.addClass('cargando');
+        this.tipo_clip = $("#navegador").controller().options.tipo_clip;
+        this.modo = $("#navegador").controller().options.modo;
+
+        // Cargar HTML
+		this.element.html("//video/clip/views/init.ejs",{ clip: this.options.clip });
+
+        // agregar clase con el tipo de clip
+        this.element.addClass(this.tipo_clip.slug);
+
+        if (this.tipo_clip.slug == 'programa') {
+            this.element.find('.tiempo').html(this.options.clip.getFechaTexto());
+        } else {
+            this.element.find('.tiempo').html(this.options.clip.getFirmaTiempo());
+        }
 
         //$.route.delegate(this.options.clip.slug, 'set', this.callback('clipSeleccionado'));
-
-		this.element.html("//video/clip/views/init.ejs",{
-			clip: this.options.clip
-		});
 
         this.element.removeClass('cargando');
 

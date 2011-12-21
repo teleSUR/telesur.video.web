@@ -10,19 +10,49 @@ steal('jquery/dom/route')
 $.Controller('Video.Pagina',
 /** @Static */
 {
-	defaults : {}
+	defaults : {},
+
+    vistas : {
+        lista : {
+            nombre : 'lista'
+        },
+        video : {
+            nombre : 'video'
+        },
+        busqueda : {
+            nombre : 'busqueda'
+        }
+    }
 },
 /** @Prototype */
 {
 	init : function() {
         steal.dev.log('inicializando Video.Pagina');
 
-        // rutas
         $.route.ready(false);
-        $.route(':tipo');
-        // escuchar cambios en hash para actualizarTipo
-        $.route.delegate('tipo', 'set', this.callback('tipoSeleccionado'));
-        $.route.delegate('tipo', 'remove', this.callback('tipoSeleccionado'));
+
+        // rutas
+        $.route(':vista/:v1');
+        $.route(':vista/:v1/:v2');
+        $.route(':vista/:v1/:v2/v3');
+
+        switch ($.route.attr('vista')) {
+            case this.constructor.vistas.lista.nombre:
+            default:
+                $.route.attr('vista', this.constructor.vistas.lista.nombre);
+                // escuchar cambios en hash para actualizarTipo
+                $.route.delegate('v1', 'set', this.callback('tipoSeleccionado'));
+                $.route.delegate('v1', 'remove', this.callback('tipoSeleccionado'));
+
+                break;
+            case 'video':
+                alert('video!');
+                break;
+            case 'busqueda':
+                alert('busqueda');
+                break;
+        }
+
 
         // cargar estructura inicial de la página
 		this.element.find('body').html("//video/pagina/views/init.ejs", {});
@@ -58,7 +88,7 @@ $.Controller('Video.Pagina',
         menu_ul.empty();
         for (var i=0, link; i<this.tipos_clip.length; i++) {
             link = $('<a>').model(this.tipos_clip[i])
-                .attr('href', $.route.url({'tipo': this.tipos_clip[i].slug})) // ver rutas
+                .attr('href', $.route.url({vista: this.constructor.vistas.lista.nombre, v1: this.tipos_clip[i].slug})) // ver rutas
                 .addClass(this.tipos_clip[i].slug)
                 .text(this.tipos_clip[i].nombre_plural.toUpperCase());
             $('<li>').append(link).appendTo(menu_ul);
@@ -67,7 +97,7 @@ $.Controller('Video.Pagina',
         // Empezar a escuchar cambios en la ruta del hash
         // si no hay ningún tipo especificado, cambiar al primer tipo por default
         $.route.ready(true);
-        if (!$.route.attr('tipo')) $.route.attr('tipo', this.tipos_clip[0].slug);
+        if (!$.route.attr('v1')) $.route.attrs({vista: this.constructor.vistas.lista.nombre, v1: this.tipos_clip[0].slug});
     },
 
     /**
@@ -85,7 +115,7 @@ $.Controller('Video.Pagina',
 
         // si se solicitó un tipo inválido entonces usar el tipo anteiror, o bien si no hay, usar el primer tipo como default
        if (!tipo_link.length > 0) {
-            $.route.attr('tipo', (tipo_slug_anterior && tipo_slug_anterior != '') ? tipo_slug_anterior : this.tipos_clip[0].slug);
+            $.route.attrs({ vista : this.constructor.vistas.lista.nombre, v1 : (tipo_slug_anterior && tipo_slug_anterior != '') ? tipo_slug_anterior : this.tipos_clip[0].slug });
             return;
         }
 

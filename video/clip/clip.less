@@ -20,26 +20,10 @@
     .opacity(80);
     position: relative;
 
-    img {
-        .opacity(70);
-        cursor: pointer;
-    }
-
-    .duracion {
-        position: absolute;
-        top: 85px;
-        right: 15px;
-        font-size: 0.90em;
-        background: black;
-        padding: 3px;
-        border: 1px solid #666;
-        .redondeado(4px);
-        .opacity(65);
-    }
-
     &.cargando {
         background: url(../resources/img/ajax_load.gif) no-repeat center 40px;
     }
+
     &.seleccionado {
         background-color: #202020;
         .opacity(100);
@@ -48,4 +32,43 @@
             .opacity(100);
         }
     }
+
+    &.programa {
+        .titulo {
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .tiempo {
+            text-align: center;
+            width: 175px;
+        }
+    }
+
+    img {
+        .opacity(70);
+        cursor: pointer;
+    }
+
+    .titulo {
+
+    }
+
+    .duracion {
+            position: absolute;
+            top: 85px;
+            right: 15px;
+            font-size: 0.90em;
+            background: black;
+            padding: 3px;
+            border: 1px solid #666;
+            .redondeado(4px);
+            .opacity(65);
+        }
+
+    .tiempo {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.80em;
+        }
 }
