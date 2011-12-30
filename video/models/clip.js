@@ -20,7 +20,6 @@ Video.Models.ApiModel('Video.Models.Clip',
             date : function(raw){
                 if(typeof raw == 'string'){
                     var matches = raw.match(/(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)/);
-
                     return new Date( matches[1], // año
                         (+matches[2])-1, // mes
                         matches[3], // día
@@ -34,7 +33,7 @@ Video.Models.ApiModel('Video.Models.Clip',
 
             /**
              * Dvuelve representación de la duración en texto
-             * Ejenplos: 00:02:00 -> 2m, 00:29:29:  30m ->  00:00:15 -> 15s
+             * Ejenplos: 00:02:00 -> 2m; 00:29:29 -> 30m; 00:00:15 -> 15s
              *
              * @param string
              */
@@ -96,6 +95,7 @@ Video.Models.ApiModel('Video.Models.Clip',
     {
         /**
          * Devuelve representación escrita de la fecha
+         * si la fecha es del año actual, omitirlo
          */
         getFechaTexto : function() {
             var formatoFecha = "d de MMMM" + ((this.constructor.fecha_actual.getYear() != this.fecha.getYear()) ? ", yyyy" : "");
@@ -110,28 +110,36 @@ Video.Models.ApiModel('Video.Models.Clip',
          * TODO: obtener fecha actual de otro lugar para tomar en cuenta diferencia de horarios
          */
         getFirmaTiempo: function() {
+            // checar si hay alor en cache antes de calcularlo
+            if (this.firmatiempo) return this.firmatiempo;
+
             var diff = this.constructor.getTimeDifference(this.fecha || new Date(), new Date()),
                 firma = "hace ";
 
             if (diff) {
                 if (diff.months > 0) {
                     firma += diff.months + ((diff.months == 1) ? " mes" : " meses");
+                    this.firmatiempo = firma;
                     return firma;
                 }
                 if (diff.weeks > 0) {
                     firma += diff.weeks + ((diff.weeks == 1) ? " semana" : " semanas");
+                    this.firmatiempo = firma;
                     return firma;
                 }
                 if (diff.days > 0) {
                     firma += diff.days + ((diff.days == 1) ? " día" : " días");
+                    this.firmatiempo = firma;
                     return firma;
                 }
                 if (diff.hours > 0) {
                     firma += diff.hours + ((diff.hours == 1) ? " hora" : " horas");
+                    this.firmatiempo = firma;
                     return firma;
                 }
                 if (diff.minutes >= 5) {
                     firma += diff.minutes + ((diff.minutes == 1) ? " minuto" : " minutos");
+                    this.firmatiempo = firma;
                     return firma;
                 }
                 if (diff.seconds > 0) {
