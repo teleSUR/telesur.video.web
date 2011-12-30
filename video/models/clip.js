@@ -33,39 +33,38 @@ Video.Models.ApiModel('Video.Models.Clip',
             },
 
             /**
-             * Dvuelve duración en texto
+             * Dvuelve representación de la duración en texto
+             * Ejenplos: 00:02:00 -> 2m, 00:29:29:  30m ->  00:00:15 -> 15s
              *
              * @param string
              */
             duracion : function(raw) {
-                var tiempo = "",
+                var duracion_texo = "",
+                    umbral_arria = 55, // redondear arriba de 55 segundos ó minutos
+                    ubral_abajo = 5, // redondear abajo de 05 segundos ó minutos
                     matches = raw.match(/(\d{2}):(\d{2}):(\d{2})/),
                     horas = parseInt(matches[1]),
                     minutos = parseInt(matches[2]),
                     segundos = parseInt(matches[3]);
 
-                if (segundos > 55) {
-                    segundos = 0;
-                    minutos++;
-                } else if (segundos < 5 && minutos > 0) {
-                    segundos = 0;
-                }
+                // redondear segundos
+                if (segundos > umbral_arria)
+                    { segundos = 0; minutos++; }
+                else if (segundos < ubral_abajo && minutos > 0)
+                    { segundos = 0; }
 
-                if (minutos > 55) {
-                    minutos = 0;
-                    horas++;
-                } else if (minutos < 5 && horas > 0) {
-                    minutos = 0;
-                }
+                // redondear minutos
+                if (minutos > umbral_arria)
+                    { minutos = 0; horas++; }
+                else if (minutos < ubral_abajo && horas > 0)
+                    { minutos = 0; }
 
-                if (horas > 0)
-                    tiempo += horas + "h ";
-                if (minutos > 0)
-                    tiempo += minutos + "m ";
-                if (segundos > 0)
-                    tiempo += segundos + "s";
+                // formar cadena
+                if (horas > 0) duracion_texo += horas + "h ";
+                if (minutos > 0) duracion_texo += minutos + "m ";
+                if (segundos > 0) duracion_texo += segundos + "s";
 
-                return tiempo;
+                return duracion_texo.replace(/^\s+|\s+$/g, '')
             }
         },
 
@@ -111,7 +110,7 @@ Video.Models.ApiModel('Video.Models.Clip',
          * TODO: obtener fecha actual de otro lugar para tomar en cuenta diferencia de horarios
          */
         getFirmaTiempo: function() {
-            var diff = this.constructor.getTimeDifference(this.fecha, new Date()),
+            var diff = this.constructor.getTimeDifference(this.fecha || new Date(), new Date()),
                 firma = "hace ";
 
             if (diff) {
