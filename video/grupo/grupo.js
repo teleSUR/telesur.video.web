@@ -11,11 +11,10 @@ $.Controller('Video.Grupo',
 /** @Static */
 {
 	defaults : {},
+
     listensTo: ['show'],
 
-    paramsDefault : {
-        detalle: 'basico'
-    },
+    paramsDefault : { detalle: 'basico' },
 
     numClipsPorFila: 3,
     numFilasCache: 1,
@@ -33,6 +32,11 @@ $.Controller('Video.Grupo',
 /** @Prototype */
 {
     'init': function() {
+        // configurar deferred
+        this.deferred = $.Deferred();
+        this.promise = this.deferred.promise();
+
+        // Inicializar en estado de "cargando" (hasta que se llame show())
         this.element.addClass('cargando');
     },
 
@@ -136,7 +140,10 @@ $.Controller('Video.Grupo',
             primero: this.paginacion.primeroConsultado,
             ultimo: this.paginacion.ultimoConsultado
         });
-        Video.Models.Clip.findAll(this.params, this.callback('clipsRecibidos'));
+
+        //Video.Models.Clip.findAll(this.params, this.callback('clipsRecibidos'));
+        var api_request = Video.Models.Clip.getDeferredModels(this.params);
+        $.when(api_request).then(this.callback('clipsRecibidos'));
 
         // no primer consulta, avanzar cache
         if (this.paginacion.ultimoMostrado > this.constructor.ultimoMostradoDefault) {
@@ -173,9 +180,12 @@ $.Controller('Video.Grupo',
 
                     this.avanzarCache();
                 }
-            } else { // primera vez, ningún clip para ese grupo
+            } else {
+
                 if (this.paginacion.numFilasMostradas == this.constructor.numFilasMostradasDefault) {
+                    // primera vez, ningún clip para ese grupo
                     this.element.remove();
+                    this.resolve();
                     $('#navegador').controller().mostrarMasGrupos(1);
                 } else {
                     // se acabaron los clips para este grupo, pero sí hubo alguno
@@ -185,10 +195,28 @@ $.Controller('Video.Grupo',
         }
     },
 
+    resolve : function() {
+        if (!this.deferred.isResolved() && !this.waiting) {
+            var self = this;
+            this.waiting = true;
+            setTimeout(function() {
+                if (self) {
+                    //alert('sre');
+                    self.deferred.resolve.apply(null);
+                }
+            }, 0);
+        }
+    },
+
     avanzarCache : function() {
+        // TODO: SE LLAMA DOS VECES AL INICIO
         if (this && this.element) {
             var clips_divs = this.element.find('.clips').children();
             var clips_mostrados = clips_divs.slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoMostrado);
+
+            this.element.find('.cabeza').show();
+            this.resolve();
+
             //var clips_recordados = clips_divs.slice(this.paginacion.primeroMostrado-1, this.paginacion.ultimoConsultado-1);
             //clips_mostrados.show();
 

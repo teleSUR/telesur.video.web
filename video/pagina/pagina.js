@@ -29,54 +29,76 @@ $.Controller('Video.Pagina',
 	init : function() {
         steal.dev.log('inicializando Video.Pagina');
 
-        $.route.ready(false);
+        // cargar estructura inicial de la página
+        this.element.find('body').html("//video/pagina/views/init.ejs", {});
 
-        // rutas
-        $.route(':vista/:v1');
-        $.route(':vista/:v1/:v2');
-        $.route(':vista/:v1/:v2/v3');
+        // ruta principal
+        $.route(':vista', {vista: this.constructor.vistas.lista.nombre});
+
+        // Leer rutas y volver a posponerlas
+        $.route.ready(true);
+        $.route.ready(false);
 
         switch ($.route.attr('vista')) {
             case this.constructor.vistas.lista.nombre:
             default:
                 $.route.attr('vista', this.constructor.vistas.lista.nombre);
-                // escuchar cambios en hash para actualizarTipo
+                // Rutas
+                $.route(':vista/:v1/:v2');
+                $.route(':vista/:v1');
                 $.route.delegate('v1', 'set', this.callback('tipoSeleccionado'));
                 $.route.delegate('v1', 'remove', this.callback('tipoSeleccionado'));
 
+                // inicializar player
+                this.element.find("#reproductor").video_player();
+
+                // crear e intentar poblar store de cookie para tipos de clip
+                this.tipos_clip = new Video.Models.TipoClip.CookieList([]).retrieve("tipos_clip");
+                // solicitar tipos en caso de que no estén en cache
+                // en cualquier caso el control pasa a this.tiposRecibidos
+                if (this.tipos_clip.length > 0) {
+                    steal.dev.log('usando tipos de store en cookie');
+                    this.tiposRecibidos();
+                } else {
+                    steal.dev.log('sin tipos en store de cookie, solicitando a servicio');
+                    var self = this;
+                    Video.Models.TipoClip.findAll({}, function(tipos) {
+                        steal.dev.log('añadiendo tipos recibidos a store de cookie');
+                        self.tipos_clip = new Video.Models.TipoClip.CookieList(tipos).store("tipos_clip");
+                        self.tiposRecibidos();
+                    });
+                }
+
                 break;
-            case 'video':
-                alert('video!');
+
+            case this.constructor.vistas.video.nombre:
+                //$.route(':vista/:slug');
+                $.route(':vista/:slug');
+                $.route.delegate('slug', 'set', this.callback('videoSeleccionado'));
+                $.route.delegate('slug', 'remove', this.callback('videoSeleccionado'));
+
+                   // alert($.route.attr('slug'));
+                    $.route.ready(true);
+                   // alert($.route.attr('slug') + '1');
+
                 break;
             case 'busqueda':
+
                 alert('busqueda');
                 break;
         }
 
 
-        // cargar estructura inicial de la página
-		this.element.find('body').html("//video/pagina/views/init.ejs", {});
 
-        // inicializar player
-        this.element.find("#reproductor").video_player();
-
-        // crear e intentar poblar store de cookie para tipos de clip
-        this.tipos_clip = new Video.Models.TipoClip.CookieList([]).retrieve("tipos_clip");
-        // solicitar tipos en caso de que no estén en cache
-        // en cualquier caso el control pasa a this.tiposRecibidos
-        if (this.tipos_clip.length > 0) {
-            steal.dev.log('usando tipos de store en cookie');
-            this.tiposRecibidos();
-        } else {
-            steal.dev.log('sin tipos en store de cookie, solicitando a servicio');
-            var self = this;
-            Video.Models.TipoClip.findAll({}, function(tipos) {
-                steal.dev.log('añadiendo tipos recibidos a store de cookie');
-                self.tipos_clip = new Video.Models.TipoClip.CookieList(tipos).store("tipos_clip");
-                self.tiposRecibidos();
-            });
-        }
 	},
+
+    videoSeleccionado : function(ev, slug, slug_anterior) {
+        //alert('se seleccionó con slug' + $.route.attr('slug'));
+        var that = this;
+        Video.Models.Clip.findOne({id: slug}, function(clip) {
+            that.element.find('#navegador').html(clip[0].titulo + '<img src="'+ clip[0].thumbnail_grande +'" />');
+        })
+    },
 
     /**
      * Se llama después de haber recibido lista de modelos TipoClip en this.tipos_clip, ya sea desde cache o servicio

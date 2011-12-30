@@ -28,6 +28,7 @@ $.Controller('Video.Clip',
 
         if (this.tipo_clip.slug == 'programa') {
             this.element.find('.tiempo').html(this.options.clip.getFechaTexto());
+            // TODO: agregar logo de programa
         } else {
             this.element.find('.tiempo').html(this.options.clip.getFirmaTiempo());
         }
