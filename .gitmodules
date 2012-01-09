@@ -10,3 +10,6 @@
 [submodule "documentjs"]
 	path = documentjs
 	url = git@github.com:desarrollotv/documentjs.git
+[submodule "mxui"]
+	path = mxui
+	url = git@github.com:desarrollotv/mxui.git

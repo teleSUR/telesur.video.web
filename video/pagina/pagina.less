@@ -1,17 +1,10 @@
-@color_fondo: #3b3b3b;
-@color_texto: #FFFFFF;
+@color_texto: black;
+@color_fondo: white;
 
 body {
-    color: @color_texto;
-    background-color: @color_fondo;
-    width: 960px;
-    background: url(../resources/img/fondo_body.png) fixed repeat-y center;
 }
 
 #pagina {
-    width: 960px;
-    overflow: hidden;
-    clear: both;
 }
 
 a {
@@ -19,51 +12,23 @@ a {
     text-decoration: none;
 }
 
-.redondeado (@radius: 5px) {
-  border-radius: @radius;
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
-}
-
-
 #cabeza {
-    background: url(../resources/img/header_completo.png) no-repeat;
-    height: 34px;
-    width: 960px;
 }
 
 #arriba {
-    position: fixed;
-    z-index: 10;
 }
 
 #centro {
-    padding-top: 66px;
-    padding-bottom: 50px;
-    width: 600px;
-    float: left;
 }
 
 #lado {
-    width: 360px;
-    height: 200px;
-    position: fixed;
-    padding-top: 66px;
-    margin-left: 600px;
 }
 
 #abajo {
-    height: 38px;
-    width: 960px;
-    background: black url(../resources/img/fondo_pie.png) no-repeat;
-    border-top: 1px solid white;
-    position: fixed;
-    bottom: 0;
+
 }
 
 #menu_tipos {
-    background: black url(../resources/img/fondo_menu_tipos.png) repeat-x;
-    height: 32px;
 
     ul {
         padding: 0;
@@ -75,13 +40,11 @@ a {
         display: inline;
         list-style-type: none;
         padding-left: 5px;
+
         a {
-            .redondeado;
             padding: 5px;
             line-height: 20px;
-            &:hover {
-                background-color: #696969;
-            }
+
             &.seleccionado {
                 background-color: @color_texto;
                 color: @color_fondo;

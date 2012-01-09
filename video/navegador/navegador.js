@@ -28,12 +28,20 @@ $.Controller('Video.Navegador',
     cargarGruposEnPasos : 2,
     ultimoMostradoDefault: 4,
 
-    modos: {
-        'noticia': ['secciones', 'regiones', 'fechas', 'programa', 'populares'],
-        'entrevista': ['secciones', 'regiones', 'fechas', 'programa', 'populares'],
+    tipos: {
+        'noticia': ['secciones', 'regiones', 'fechas', 'popularidad'],
+        'entrevista': ['secciones', 'regiones', 'fechas', 'popularidad'],
         'programa': ['programa', 'fechas'],
         'documental': ['secciones', 'fechas'],
         'reportaje': ['secciones', 'fechas']
+    },
+
+    modos: {
+        secciones: { nombre: 'secciones' },
+        regiones: { nombre: 'regiones' },
+        fechas: { nombre: 'cronología'},
+        programa: { nombre: 'programas'},
+        popularidad: { nombre: 'populares'}
     },
 
     regiones: ['america-latina', 'america', 'europa', 'asia', 'africa', 'oceania'],
@@ -109,7 +117,7 @@ $.Controller('Video.Navegador',
 
         // callbacks de rutas
         $.route.delegate('v2', 'set', this.callback('modoSeleccionado'));
-        $.route.delegate('v2', 'remove', this.callback('modoSeleccionado'));
+        //$.route.delegate('v2', 'remove', this.callback('modoSeleccionado'));
 
         // inicia proceso para llenar los datos en el navegador,
         // trae los grupos a mostrar y éstos los clips a mostrar
@@ -128,9 +136,11 @@ $.Controller('Video.Navegador',
 
         // Consturir menú de modos
         menu_modos.empty();
-        $.each(this.constructor.modos[tipo_clip.slug], function(i, modo) {
+
+        var modos = this.constructor.modos;
+        $.each(this.constructor.tipos[tipo_clip.slug], function(i, modo) {
             $('<a>').attr('href', $.route.url({vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}))
-                .html('por ' + modo)
+                .html(modos[modo].nombre.toUpperCase())
                 .addClass(modo)
                 .appendTo(menu_modos);
         });
@@ -138,7 +148,7 @@ $.Controller('Video.Navegador',
 
         // Si ya había un modo seleccionado, checar si el nuevo tipo soporta
         // el mismo modo, si no, cambiar el modo al default (el primero)
-        var modos_disponibles = this.constructor.modos[tipo_clip.slug];
+        var modos_disponibles = this.constructor.tipos[tipo_clip.slug];
         var modo_adecuado = (!this.options.modo || modos_disponibles.indexOf(this.options.modo) == -1) ? modos_disponibles[0] : this.options.modo;
 
         // Cambiar la ruta si es necesario (puede activar callbacks en $.route)
@@ -290,7 +300,7 @@ $.Controller('Video.Navegador',
                 };
                 break;
 
-            case 'populares':
+            case 'popularidad':
                 optionsFnc = function(tiempo) {
                     return $.extend(true, {}, base_options, {
                         titulo : fecha_params[tiempo].nombre,
@@ -345,7 +355,7 @@ $.Controller('Video.Navegador',
     modoSeleccionado : function(ev, modo, modo_anterior) {
         // si no hay un modo especificado, usar default para el tipo
         if (!modo) {
-            $.route.attr("v2", this.constructor.modos[this.options.tipo_clip.slug][0]);
+            $.route.attr("v2", this.constructor.tipos[this.options.tipo_clip.slug][0]);
             return;
         }
 
@@ -376,7 +386,7 @@ $.Controller('Video.Navegador',
             case 'fechas':
                 this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
                 break;
-            case 'populares':
+            case 'popularidad':
                 this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
                 break;
             default:

@@ -70,7 +70,12 @@ $.Controller('Video.Player',
 
         // actualizar HTML con datos del clip
         this.element.find('.titulo').html(clip.titulo);
-        this.element.find('.descripcion').html(clip.descripcion);
+        var descripcion_html = clip.descripcion.substr(0, 130).replace(/\s*\w+$/, '') + '... <a href="#">(ver más)</a>';
+        this.element.find('.descripcion').html(descripcion_html);
+        this.element.find('.opciones').show();
+
+        // link
+        this.element.find('.mas a').attr('href', $.route.url({vista : 'video', v1 : clip.slug}));
 
         // determinar parámetros para player
         var options = { image: this.clip.thumbnail_mediano };
@@ -83,6 +88,7 @@ $.Controller('Video.Player',
         // cargar clip en player
         jwplayer().load(options).play();
     }
+
 })
 
 });

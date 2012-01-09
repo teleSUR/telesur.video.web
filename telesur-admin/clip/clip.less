@@ -1,0 +1,72 @@
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.opacity(@op:100)
+{
+    filter:alpha(opacity=@op);
+    -moz-opacity:@op/100;
+    -khtml-opacity:@op/100;
+    opacity:@op/100;
+}
+
+.video_clip {
+    width: 500px;
+    height: 200px;
+    padding: 10px 10px 0 10px;
+
+    float: none;
+    position: relative;
+
+
+    &.seleccionado {
+        background-color: #202020;
+        .opacity(100);
+
+        img {
+            .opacity(100);
+        }
+    }
+
+    &.programa {
+        .titulo {
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .tiempo {
+            text-align: center;
+            width: 175px;
+        }
+    }
+
+    img {
+        cursor: pointer;
+        float: left;
+        padding: 0 10px;
+    }
+
+    .titulo {
+
+    }
+
+//    .duracion {
+//            position: absolute;
+//            top: 85px;
+//            right: 15px;
+//            font-size: 0.90em;
+//            background: black;
+//            padding: 3px;
+//            border: 1px solid #666;
+//            .redondeado(4px);
+//            .opacity(65);
+//        }
+
+    .tiempo {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.80em;
+        }
+}

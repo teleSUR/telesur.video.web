@@ -11,7 +11,10 @@ $.Controller('Video.Clip',
 {
 	defaults : {
         clip : null
-    }
+    },
+
+    /* para redefinir en sitios */
+    clip_template: "//video/clip/views/init.ejs"
 },
 /** @Prototype */
 {
@@ -21,7 +24,7 @@ $.Controller('Video.Clip',
         this.modo = $("#navegador").controller().options.modo;
 
         // Cargar HTML
-		this.element.html("//video/clip/views/init.ejs",{ clip: this.options.clip });
+		this.element.html(this.constructor.clip_template, { clip: this.options.clip });
 
         // agregar clase con el tipo de clip
         this.element.addClass(this.tipo_clip.slug);

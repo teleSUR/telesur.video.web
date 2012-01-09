@@ -1,6 +1,6 @@
 steal('steal/less').then('./grupo.less')
 
-.then('video/clip')
+.then('video/clip/admin_clip.js')
 
 .then('jquery/controller','jquery/view/ejs')
 	.then( './views/init.ejs', function($){
@@ -53,7 +53,7 @@ $.Controller('Video.Grupo',
         // inicializar HTML
 		this.element.html("//video/grupo/views/init.ejs", {});
         this.element.find('.paginacion').hide();
-        this.element.find('.cabeza').html(this.options.titulo);
+        this.element.find('.cabeza').html(this.options.titulo.toUpperCase());
         this.element.find('.clips').css('height', '165px');
 
         // inicializar objeto de objeto de parámetros

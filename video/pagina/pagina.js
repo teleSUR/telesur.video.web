@@ -1,6 +1,7 @@
 steal('jquery/dom/route')
 .then('steal/less').then('./pagina.less')
-.then('video/navegador', 'video/player')
+
+.then('video/navegador', 'video/player', 'video/buscador')
 
 .then('jquery/controller','jquery/view/ejs')
     .then('./views/init.ejs', function($) {
@@ -30,27 +31,57 @@ $.Controller('Video.Pagina',
         steal.dev.log('inicializando Video.Pagina');
 
         // cargar estructura inicial de la página
-        this.element.find('body').html("//video/pagina/views/init.ejs", {});
+        //this.element.find('body').html("//video/pagina/views/init.ejs", {});
 
-        // ruta principal
-        $.route(':vista', {vista: this.constructor.vistas.lista.nombre});
+        // rutas
+        $.route(':vista', { vista: this.constructor.vistas.lista.nombre });
+        $.route(':vista/:v1/:v2');
+        $.route(':vista/:v1');
+
+        $.route.delegate('vista', 'set', this.callback('vistaSeleccionada'));
+        $.route.delegate('v1', 'set', this.callback('v1Callback'));
+        //$.route.delegate('v1', 'remove', this.callback('v1Callback'));
 
         // Leer rutas y volver a posponerlas
-        $.route.ready(true);
-        $.route.ready(false);
+        $.route.ready(true);$.route.ready(false);
 
-        switch ($.route.attr('vista')) {
+        //$.route.bind('change', this.callback('navegacionCambiada'));
+	},
+
+//    navegacionCambiada :  function( ev, attr, how, nevVal, oldVal ) {
+//        if (attr == 'vista') {
+//           // alert('se cambia vista');
+//        }
+//        else if (attr = 'v1') {
+//            //alert('se cambia v1');
+//        }
+//    },
+
+    v1Callback : function(ev, val, oldval){
+        switch ($.route.attr('vista')){
+            case this.constructor.vistas.lista.nombre:
+                return this.tipoSeleccionado(ev, val, oldval);
+            case this.constructor.vistas.video.nombre:
+                return this.videoSeleccionado(ev, val, oldval);
+        }
+    },
+
+    vistaSeleccionada : function(ev, vista, vista_anterior) {
+        if (!vista) return;
+
+        //alert('nueva: ' +vista + ' y vieja: ' + vista_anterior);
+        this.element.find('body').empty().html("//video/pagina/views/init.ejs", {});
+
+        switch (vista) {
             case this.constructor.vistas.lista.nombre:
             default:
-                $.route.attr('vista', this.constructor.vistas.lista.nombre);
-                // Rutas
-                $.route(':vista/:v1/:v2');
-                $.route(':vista/:v1');
-                $.route.delegate('v1', 'set', this.callback('tipoSeleccionado'));
-                $.route.delegate('v1', 'remove', this.callback('tipoSeleccionado'));
+                //$.route.attr('vista', this.constructor.vistas.lista.nombre);
 
                 // inicializar player
                 this.element.find("#reproductor").video_player();
+
+                // inicializar buscador
+                this.element.find("#buscador").video_buscador();
 
                 // crear e intentar poblar store de cookie para tipos de clip
                 this.tipos_clip = new Video.Models.TipoClip.CookieList([]).retrieve("tipos_clip");
@@ -72,14 +103,10 @@ $.Controller('Video.Pagina',
                 break;
 
             case this.constructor.vistas.video.nombre:
-                //$.route(':vista/:slug');
-                $.route(':vista/:slug');
-                $.route.delegate('slug', 'set', this.callback('videoSeleccionado'));
-                $.route.delegate('slug', 'remove', this.callback('videoSeleccionado'));
 
-                   // alert($.route.attr('slug'));
-                    $.route.ready(true);
-                   // alert($.route.attr('slug') + '1');
+                // alert($.route.attr('slug'));
+                $.route.ready(true);
+                // alert($.route.attr('slug') + '1');
 
                 break;
             case 'busqueda':
@@ -87,10 +114,7 @@ $.Controller('Video.Pagina',
                 alert('busqueda');
                 break;
         }
-
-
-
-	},
+    },
 
     videoSeleccionado : function(ev, slug, slug_anterior) {
         //alert('se seleccionó con slug' + $.route.attr('slug'));
@@ -120,6 +144,14 @@ $.Controller('Video.Pagina',
         // si no hay ningún tipo especificado, cambiar al primer tipo por default
         $.route.ready(true);
         if (!$.route.attr('v1')) $.route.attrs({vista: this.constructor.vistas.lista.nombre, v1: this.tipos_clip[0].slug});
+
+        // mostrar menú idiomas
+        setTimeout(function() {
+            $('#idioma').slideDown('slow');
+            $('#centro').animate({'padding-top': '+=50px'}, 'slow');
+            $('#lado').animate({'padding-top': '+=50px'}, 'slow');
+        }, 3500)
+
     },
 
     /**
@@ -153,7 +185,15 @@ $.Controller('Video.Pagina',
             steal.dev.log('por crear controlador para navegador por primera vez para tipo: '+ tipo_slug);
             div_navegador.video_navegador({tipo_clip: tipo_link.model()});
         }
+    },
+
+    '#idioma input click': function() {
+        $('#idioma').slideUp();
+        $('#centro').animate({'padding-top': '-=50px'});
+        $('#lado').animate({'padding-top': '-=50px'});
     }
+
+
 });
 
 });

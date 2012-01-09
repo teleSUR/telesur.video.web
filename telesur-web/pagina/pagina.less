@@ -1,0 +1,138 @@
+@color_fondo: #3b3b3b;
+@color_texto: #FFFFFF;
+
+body {
+    color: @color_texto;
+    width: 960px;
+    background: @color_fondo url(../resources/img/fondo_body.png) fixed repeat-y center;
+}
+
+#pagina {
+    width: 960px;
+    overflow: hidden;
+    clear: both;
+}
+
+a {
+    color: @color_texto;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+
+#cabeza {
+    background: url(../resources/img/header_completo.png) no-repeat;
+    height: 34px;
+    width: 960px;
+}
+
+#arriba {
+    position: fixed;
+    z-index: 10;
+}
+
+#buscador {
+    float: right;
+    line-height: 20px;
+
+    input {
+
+    }
+}
+
+#idioma {
+    display: none;
+
+    background: black;
+    height: 50px;
+    font-size: 1.4em;
+    letter-spacing: 2px;
+    line-height: 50px;
+
+    input {
+        margin-left: 3em;
+    }
+
+    label {
+        cursor: pointer;
+        &:hover { text-decoration: underline; }
+    }
+}
+
+#centro {
+    padding-top: 66px;
+    padding-bottom: 50px;
+    width: 560px;
+    float: left;
+    background: url(../resources/img/fondo_sep_der.png) right repeat-y;
+    padding-right: 15px;
+}
+
+#lado {
+    width: 360px;
+
+    position: fixed;
+    padding-top: 66px;
+    margin-left: 590px;
+
+    #reproductor {
+        height: 400px;
+    }
+
+    #publicidad {
+        width: 350px;
+        height: 280px;
+        background-image: url(../resources/img/publicidad.jpg);
+    }
+}
+
+#abajo {
+    height: 38px;
+    width: 960px;
+    background: black url(../resources/img/fondo_pie.png) no-repeat;
+    border-top: 1px solid white;
+    position: fixed;
+    bottom: 0;
+}
+
+#menu_tipos {
+    font-size: 1.2em;
+    background: black url(../resources/img/fondo_menu_tipos.png) repeat-x;
+    height: 32px;
+
+    ul {
+        padding: 0;
+        margin: 0;
+        padding-top:5px;
+        float: left;
+    }
+
+    li {
+        display: inline;
+        list-style-type: none;
+        padding-left: 5px;
+
+        a {
+            .redondeado;
+            padding: 3px;
+            line-height: 20px;
+            &:hover {
+                background-color: #333333;
+                text-decoration: none;
+            }
+            &.seleccionado {
+                background-color: #575757;
+                color: @color_texto;
+            }
+        }
+    }
+}

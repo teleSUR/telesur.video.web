@@ -1,3 +1,10 @@
+Hay tres aplicaciones
+
+- telesur-video <- extiende a video
+- telesur-web  <- extiende a video
+- video <- aplicación genérica
+
+
 URL's staging:
 
 (modo producción)

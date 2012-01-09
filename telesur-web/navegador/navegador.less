@@ -1,0 +1,34 @@
+.redondeado (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.video_navegador {
+    width: 560px;
+
+    .menu_modos {
+        background: url(../resources/img/fondo_menu_modos.png);
+        border-bottom: 1px solid black;
+        height: 30px;
+        font-size: 1.1em;
+        text-align: center;
+
+        a {
+            float: left;
+            margin: 4px 0 0 10px;
+            padding: 3px 5px;
+        }
+
+        a.activo {
+            background-color: #550806;
+            .redondeado;
+
+        }
+    }
+
+    .mas_grupos {
+        display: none;
+        font-size: 2em;
+    }
+}
