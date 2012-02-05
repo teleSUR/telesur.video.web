@@ -11,11 +11,20 @@ delete $.fn['video_navegador']; // permite volver a registrar el jquery plugin g
 Video.Navegador('Video.Navegador',
     /** @Static */
     {
+        init : function() {
+            $.extend(this.modos, {
+                'todos' : { nombre: {es: 'todos', en: 'all', pt: 'todos' } }
+            });
+
+            var self = this;
+            $.each(this.tipos, function(tipo, modos) {
+                self.tipos[tipo].unshift('todos');
+            });
+        }
 
     },
     /** @Prototype */
     {
-
     }
 )
 });

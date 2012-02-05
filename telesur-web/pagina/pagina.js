@@ -14,6 +14,10 @@ Video.Pagina('Video.Pagina',
     },
     /** @Prototype */
     {
+        init : function() {
+            this._super();
+
+        }
     }
 );
 });

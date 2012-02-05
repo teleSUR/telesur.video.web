@@ -7,7 +7,6 @@
 }
 
 .video_grupo {
-    min-height: 500px;
 
     &.cargando {
         background: url(../resources/img/ajax_load.gif) no-repeat center;
@@ -17,10 +16,12 @@
        /* border: 1px solid #b40300; */
     }
 
+
     .cabeza {
-        background-color: #d3d3d3;
-        height: 20px;
-        line-height: 20px;
+        background-color: #EEEEEE;
+        border: 1px solid #222222;
+        height: 30px;
+        line-height: 30px;
         text-align: center;
         clear: both;
         display:none;
@@ -30,7 +31,7 @@
         overflow: hidden;
 
         .clips {
-            min-height: 300px;
+            /*min-height: 300px;*/
             overflow: hidden;
         }
     }
@@ -44,14 +45,31 @@
         font-size: 9px;
         border: 1px solid #808080;
         color: white;
-        background: black;
-        width: 300px;
+        width: 150px;
         margin: 5px auto;
         .redondeado;
 
         &:hover {
-            background: grey;
+            background: #222222;
             color: black;
+        }
+
+        &.mas {
+            background: url(../resources/img/mas.png) no-repeat center;
+            margin-bottom: 5px;
+        }
+
+        &.mas:hover {
+            background: url(../resources/img/mas_over.png) no-repeat center;
+        }
+
+        &.menos {
+            background: url(../resources/img/menos.png) no-repeat center;
+            margin-top: 5px;
+        }
+
+        &.menos:hover {
+            background: url(../resources/img/menos_over.png) no-repeat center;
         }
     }
 

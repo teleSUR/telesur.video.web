@@ -37,8 +37,10 @@ $.Model('Video.Models.ApiModel',
      *  Opciones predeterminadas para $.ajax
      */
     getAjaxOptions : function(id) {
+        if (!$(document).controller().idioma) { }
+        idioma_prefix = ($(document).controller().idioma == 'es') ? '' : $(document).controller().idioma + '/';
         return {
-            url : (this.is_crossdomain ? this.api_baseurl : '/') + 'api/' + this._shortName + '/' + ((typeof id != 'undefined') ? id + '/' : ''),
+            url : (this.is_crossdomain ? this.api_baseurl : '/') + idioma_prefix  + 'api/' + this._shortName + '/' + ((typeof id != 'undefined') ? id + '/' : ''),
             dataType: (this.is_crossdomain ? 'jsonp ' : 'json ') + this._shortName + '.models',
             error: this.is_cross_domain && this.ajaxErrorFnc, tryCount: 0, retryLimit: 3
         }

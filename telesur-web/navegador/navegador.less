@@ -13,6 +13,9 @@
         height: 30px;
         font-size: 1.1em;
         text-align: center;
+        position: fixed;
+        z-index: 11;
+        width: 560px;
 
         a {
             float: left;
@@ -21,14 +24,31 @@
         }
 
         a.activo {
-            background-color: #550806;
+            background-color: #333333;
             .redondeado;
 
         }
     }
 
-    .mas_grupos {
+    .grupos {
+        padding-top: 40px;
+    }
+
+    .mas_grupos a {
+        margin: 0 auto;
+        width: 300px;
+        padding: 0.3em 0.6em;
         display: none;
-        font-size: 2em;
+        background-color: #222222;
+        .redondeado;
+        display: block;
+        text-align: center;
+
+        color: #DDDDDD;
+
+        &:hover {
+            background-color: #333333;
+        }
+
     }
 }

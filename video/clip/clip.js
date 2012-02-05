@@ -20,29 +20,43 @@ $.Controller('Video.Clip',
 {
 	init : function(){
         this.element.addClass('cargando');
-        this.tipo_clip = $("#navegador").controller().options.tipo_clip;
-        this.modo = $("#navegador").controller().options.modo;
 
         // Cargar HTML
-		this.element.html(this.constructor.clip_template, { clip: this.options.clip });
+        this.element.html(this.constructor.clip_template, { clip: this.options.clip });
 
-        // agregar clase con el tipo de clip
-        this.element.addClass(this.tipo_clip.slug);
+        if ($.route.attr('vista') == 'lista' || !$.route.attr('vista')) {
+            this.tipo_clip = $("#navegador").controller().options.tipo_clip;
+            this.modo = $("#navegador").controller().options.modo;
+            // agregar clase con el tipo de clip
+            this.element.addClass(this.tipo_clip.slug);
 
-        if (this.tipo_clip.slug == 'programa') {
-            this.element.find('.tiempo').html(this.options.clip.getFechaTexto());
-            // TODO: agregar logo de programa
-        } else {
-            this.element.find('.tiempo').html(this.options.clip.getFirmaTiempo());
+            if (this.tipo_clip.slug == 'programa') {
+                this.element.find('.tiempo').html(this.options.clip.getFechaTexto());
+                // TODO: agregar logo de programa
+            } else {
+                this.element.find('.tiempo').html(this.options.clip.getFirmaTiempo());
+            }
+
+            var reproductor = $('#reproductor').controller();
+            if (reproductor.clip && reproductor.clip.slug == this.options.clip.slug) {
+                this.element.addClass('seleccionado');
+            }
+            if (!reproductor.clip_cargado){
+                reproductor.cambiarClip(this.options.clip, true);
+            }
         }
+        else if ($.route.attr('vista') == 'detalle')
+        {
 
-        //$.route.delegate(this.options.clip.slug, 'set', this.callback('clipSeleccionado'));
+        }
 
         this.element.removeClass('cargando');
 
-        if ($('#reproductor').controller().clip && $('#reproductor').controller().clip.slug == this.options.clip.slug) {
-            this.element.addClass('seleccionado');
-        }
+
+
+        //$.route.delegate(this.options.clip.slug, 'set', this.callback('clipSeleccionado'));
+
+
 	},
 
 	'img click' : function(el, ev) {

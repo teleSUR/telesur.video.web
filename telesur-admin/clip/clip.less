@@ -4,6 +4,24 @@
   -moz-border-radius: @radius;
 }
 
+div.editar_form {
+    .redondeado(10px);
+    width: 500px;
+    padding: 10px;
+    background: white;
+    height: auto !important;
+
+    label {
+        display: block;
+        clear: left;
+        margin-top: 8px;
+    }
+
+    input, textarea { width: 430px; }
+    textarea#descripcion { height: 110px; }
+
+}
+
 .opacity(@op:100)
 {
     filter:alpha(opacity=@op);
@@ -13,14 +31,19 @@
 }
 
 .video_clip {
-    width: 500px;
-    height: 200px;
-    padding: 10px 10px 0 10px;
+    height: 165px;
+    padding-top: 10px;
 
     float: none;
     position: relative;
 
+    font-size: 13px;
+    line-height: normal;
 
+    clear: both;
+
+
+/**
     &.seleccionado {
         background-color: #202020;
         .opacity(100);
@@ -47,9 +70,64 @@
         padding: 0 10px;
     }
 
-    .titulo {
+    **/
+
+    &:hover {
+        background: #EEEEEE;
+    }
+
+
+
+    > div {
+        float: left;
+        margin-left: 10px;
+        height: 165px;
+        overflow: auto;
+
+        th {
+            text-align: right;
+            margin-right: 4px;
+        }
+
+        &.thumbnail {
+            width: 280px;
+
+            img {
+                height: 155px;
+            }
+        }
+
+        &.redaccion {
+            width: 380px;
+
+            .titulo {
+                font-weight: bold;
+                font-size: 110%;
+                padding-bottom: 5px;
+            }
+        }
+
+        &.detalles {
+            width: 250px;
+        }
+
+        &.opciones {
+           width: 150px;
+        }
+
+        &.acciones a {
+            background-repeat: no-repeat;
+            display: block; float: left;
+            padding-left: 20px;
+            margin: 3px;
+            &.link { background-image: url(../resources/img/application_link.png) }
+            &.despublicar { background-image: url(../resources/img/application_form_delete.png) }
+            &.editar { background-image: url(../resources/img/application_edit.png) }
+        }
 
     }
+
+
 
 //    .duracion {
 //            position: absolute;
@@ -63,10 +141,4 @@
 //            .opacity(65);
 //        }
 
-    .tiempo {
-            position: absolute;
-            bottom: 5px;
-            right: 10px;
-            font-size: 0.80em;
-        }
 }

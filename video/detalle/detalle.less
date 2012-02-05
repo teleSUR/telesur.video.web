@@ -1,0 +1,106 @@
+@color_fondo: #3b3b3b;
+
+.video_detalle {
+
+    margin: 66px 0 0 0;
+    position: fixed;
+    height: 500px;
+    z-index: 20000;
+    background: #0f0e0e;
+    width: 960px;
+    overflow: hidden;
+
+    .relacionados {
+        .header {
+             height: 37px;
+             background: url(../../telesur-web/resources/img/relacionados_header.jpg) no-repeat;
+         }
+
+        .video_clip { padding: 0 }
+        width: 180px;
+        height: 500px;
+        float: left;
+        clear: left;
+        background: url(../../telesur-web/resources/img/fondo_sep_der.png) repeat-y right;
+        padding-right: 20px;
+        margin-right: 10px;
+    }
+
+    .visor {
+        width: 750px;
+        float: left;
+
+        .player {
+            width: 576px;
+            height: 338px;
+            background: url(../../telesur-web/resources/img/detalle_marco_player.jpg) no-repeat;
+            float: left;
+
+            img {
+                display: block;
+                width: 560px;
+                margin: 8px 0 0 8px;
+            }
+
+            #standalone_player {
+                margin: 8px 0 0 8px;
+            }
+         }
+
+        .nav {
+            width: 55px;
+            height: 338px;
+            float: left;
+            cursor: pointer;
+
+            &.izq {
+                background: url(../../telesur-web/resources/img/detalle_nav_izq.jpg) no-repeat;
+            }
+            &.der {
+                background: url(../../telesur-web/resources/img/detalle_nav_der.jpg) no-repeat;
+            }
+
+        }
+
+        .regresar {
+             float: left;
+             width: 35px;
+             height: 338px;
+             cursor: pointer;
+             background: url(../../telesur-web/resources/img/atras.png) no-repeat;
+         }
+
+
+    }
+    
+    .datos {
+        width: 450px;
+        float: left;
+        background: url(../../telesur-web/resources/img/sombra_arriba.jpg) repeat-x top;
+
+        .sociales {
+            background: url(../../telesur-web/resources/img/fondo_barra_horizontal.jpg) repeat-x;
+            height: 45px;
+
+             .fondo_sociales {
+                background: url(../../telesur-web/resources/img/sociales.png) no-repeat right 5px;
+                height: 25px; margin-right: 1em;
+            }
+        }
+
+        .titulo {
+            h1 { font-size: 16px; margin: 0; padding: 0; }
+        }
+    }
+
+    .comentarios {
+        width: 300px;
+        height: 200px;
+        float: left;
+
+        background: url(../../telesur-web/resources/img/disqus.jpg) no-repeat;
+
+    }
+
+
+}

@@ -1,1 +1,69 @@
-Mi clip!
+<div class="thumbnail">
+    <img src="<%= this.clip.thumbnail_mediano %>" alt="<%= this.clip.titulo %>" />
+</div>
+
+<div class="redaccion">
+    <div class="titulo"><%= this.clip.titulo %></div>
+    <div class="descripcion"><%= this.clip.descripcion %></div>
+
+</div>
+
+<div class="detalles">
+    <table>
+
+        <tr>
+            <th>Fecha</th>
+            <td><%= this.clip.getFechaTexto() %>, <%= this.clip.getHoraTexto() %></td>
+        </tr>
+
+        <% if (this.clip.categoria) { %>
+            <tr>
+                <th>Categoría</th>
+                <td><%= this.clip.categoria.nombre %></td>
+            </tr>
+        <% } %>
+
+        <tr>
+            <th>Ciudad</th>
+            <td><%= this.clip.ciudad %></td>
+        </tr>
+
+        <% if (this.clip.pais) { %>
+            <tr>
+                <th>Paús</th>
+                <td><%= this.clip.pais.nombre %></td>
+            </tr>
+        <% } %>
+
+        <% if (this.clip.pais_secundario) { %>
+            <tr>
+                <th>País secundario</th>
+                <td><%= this.clip.pais_secundario.nombre %></td>
+            </tr>
+        <% } %>
+
+        <% if (this.clip.programa) { %>
+        <tr>
+            <th>Origen</th>
+            <td><%= this.clip.programa.nombre %></td>
+        </tr>
+        <% } %>
+
+
+        <% if (this.clip.corresponsal) { %>
+            <tr>
+                <th>Corresponsal</th>
+                <td><%= this.clip.corresponsal.nombre %></td>
+            </tr>
+        <% } %>
+    </table>
+</div>
+
+<div class="acciones">
+<ul>
+    <li><a class="link" href="http://multimedia.telesurtv.net/media/telesur.video.web/telesur-web/#!es/video/<%= this.clip.slug %>">Link permanente</a></li>
+    <li><a class="editar" href="#">Editar</a></li>
+    <li><a class="despublicar" href="#">Despublicar</a></li>
+
+</ul>
+</div>

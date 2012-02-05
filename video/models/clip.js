@@ -102,6 +102,10 @@ Video.Models.ApiModel('Video.Models.Clip',
             return $.format.date(this.fecha, formatoFecha);
         },
 
+        getHoraTexto : function() {
+            return $.format.date(this.fecha, 'HH:mm');
+        },
+
         /**
          *
          * Devuelve cadena con una represetación legible de la edad del clip

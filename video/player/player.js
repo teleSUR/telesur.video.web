@@ -1,7 +1,8 @@
 steal('steal/less').then('./player.less');
 steal({src: '../resources/mediaplayer/jwplayer.js', packaged: false})
 
-.then( 'jquery/controller','jquery/view/ejs')
+
+.then( 'jquery/controller','jquery/view/ejs', 'video/detalle')
 	.then( './views/init.ejs', function($){
 
 /**
@@ -19,6 +20,7 @@ $.Controller('Video.Player',
 },
 /** @Prototype */
 {
+    clip_cargado: false,
     /**
      * inicializa controlador para player
      */
@@ -59,9 +61,11 @@ $.Controller('Video.Player',
      *
      * @param clip
      */
-    cambiarClip: function(clip) {
+    cambiarClip: function(clip, sin_autoplay) {
+
+        this.clip_cargado = true;
         // si se intenta cambiar al mismo clip, sólo pausar/despausar
-        if (this.clip && this.clip == clip) {
+        if (this.clip && this.clip == clip && !sin_autoplay) {
             return jwplayer().pause();
         }
 
@@ -70,12 +74,12 @@ $.Controller('Video.Player',
 
         // actualizar HTML con datos del clip
         this.element.find('.titulo').html(clip.titulo);
-        var descripcion_html = clip.descripcion.substr(0, 130).replace(/\s*\w+$/, '') + '... <a href="#">(ver más)</a>';
+        var descripcion_html = clip.descripcion.substr(0, 40).replace(/\s*\w+$/, '') + '... <a href="#">(ver&nbsp;más)</a>';
         this.element.find('.descripcion').html(descripcion_html);
         this.element.find('.opciones').show();
 
         // link
-        this.element.find('.mas a').attr('href', $.route.url({vista : 'video', v1 : clip.slug}));
+        this.element.find('.opciones a').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
 
         // determinar parámetros para player
         var options = { image: this.clip.thumbnail_mediano };
@@ -85,8 +89,11 @@ $.Controller('Video.Player',
             options = $.extend(options, { file: clip.archivo_url });
         }
 
+        jwplayer().load(options);
         // cargar clip en player
-        jwplayer().load(options).play();
+        if (!sin_autoplay) {
+            jwplayer().play();
+        }
     }
 
 })

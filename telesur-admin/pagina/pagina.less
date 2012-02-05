@@ -9,12 +9,42 @@ body {
 }
 
 #pagina {
-    width: 1500px;
+    width: 1200px;
 }
 
+.archivo_status {
+    clear: both;
+
+    &.success {
+      color: green;
+    }
+
+    &.error {
+      color: red;
+    }
+
+}
+
+
+.procesando {
+   font-weight: bold;
+}
+
+.nuevo_boton {
+    width: 180px;
+    height: 50px;
+    position: absolute;
+    left: 1000px;
+    top: 5px;
+    cursor: pointer;
+
+}
+
+
+
 a {
-    color: @color_texto;
-    text-decoration: none;
+    color: #610614;
+    text-decoration: underline;
 }
 
 .redondeado (@radius: 5px) {
@@ -25,36 +55,47 @@ a {
 
 
 #cabeza {
-    background: none;
-    height: 34px;
-    width: 1500px;
+    background: url(../resources/img/admin_header.png) no-repeat;
+    height: 58px;
 }
 
 #arriba {
 }
 
 #centro {
-    padding-top: 66px;
     padding-bottom: 50px;
-    width: 1500px;
+    width: 100%;
 }
 
 #lado {
-    width: 360px;
-    height: 200px;
+    display: none;
+}
+
+#idioma {
+    display: none !important;
+}
+
+#reproductor {
     position: fixed;
-    padding-top: 66px;
-    margin-left: 600px;
+    top: 10px; right: 10px;
+    width: 370px;
+}
+
+#buscador {
+    float: right;
+    padding-right: 20px;
+    line-height: 40px;
 }
 
 #menu_tipos {
-    background: none;
-    height: 32px;
+    background: url(../resources/img/admin_menu_bg.png) repeat-x;
+    height: 40px;
 
     ul {
         padding: 0;
         margin: 0;
-        padding-top:5px;
+        float: left;
+        width: 700px;
     }
 
     li {
@@ -62,11 +103,16 @@ a {
         list-style-type: none;
         padding-left: 5px;
         a {
-            .redondeado;
-            padding: 5px;
-            line-height: 20px;
+            color: white;
+            text-decoration: none;
+            line-height: 40px;
+            display: block; height: 40px; float:left;
+            margin: 0 5px;
+            padding: 0 5px;
+
             &:hover {
-                background-color: #696969;
+                color: white;
+                background-color: #333333;
             }
             &.seleccionado {
                 background-color: @color_texto;
@@ -75,3 +121,42 @@ a {
         }
     }
 }
+
+
+
+
+.qq-uploader { position:relative; width: 100%;}
+
+.qq-upload-button {
+    float: left;
+    display:block; /* or inline-block */
+    width: 150px; padding: 7px 0; text-align:center;
+    background:#880000; border-bottom:1px solid #ddd;color:#fff;
+}
+.qq-upload-button-hover {background:#cc0000;}
+.qq-upload-button-focus {outline:1px dotted black;}
+
+.qq-upload-drop-area {
+    position:absolute; top:0; left:0; width:100%; height:100%; min-height: 70px; z-index:2;
+    background:#FF9797; text-align:center;
+}
+.qq-upload-drop-area span {
+    display:block; position:absolute; top: 50%; width:100%; margin-top:-8px; font-size:16px;
+}
+.qq-upload-drop-area-active {background:#FF7171;}
+
+.qq-upload-list {float: left;margin:15px 35px; padding:0; list-style:disc;}
+.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px;}
+.qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
+    margin-right: 7px;
+}
+
+.qq-upload-file {}
+.qq-upload-spinner {display:inline-block; background: url("../resources/loading.gif"); width:15px; height:15px; vertical-align:text-bottom;}
+.qq-upload-size,.qq-upload-cancel {font-size:11px;}
+
+.qq-upload-failed-text {display:none;}
+.qq-upload-fail .qq-upload-failed-text {display:inline;}
+
+
+ background: url() no-repeat;

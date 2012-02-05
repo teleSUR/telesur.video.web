@@ -1,10 +1,11 @@
-@color_fondo: #3b3b3b;
+@color_fondo: #909090;
 @color_texto: #FFFFFF;
+@color_frente: #0D0C0C;
 
 body {
     color: @color_texto;
     width: 960px;
-    background: @color_fondo url(../resources/img/fondo_body.png) fixed repeat-y center;
+    background: @color_fondo url(../resources/img/fondo_pag.png) fixed repeat-y center;
 }
 
 #pagina {
@@ -52,7 +53,7 @@ a:hover {
 #idioma {
     display: none;
 
-    background: black;
+    background: @color_frente;
     height: 50px;
     font-size: 1.4em;
     letter-spacing: 2px;
@@ -71,7 +72,7 @@ a:hover {
 #centro {
     padding-top: 66px;
     padding-bottom: 50px;
-    width: 560px;
+    width: 573px;
     float: left;
     background: url(../resources/img/fondo_sep_der.png) right repeat-y;
     padding-right: 15px;
@@ -82,16 +83,21 @@ a:hover {
 
     position: fixed;
     padding-top: 66px;
-    margin-left: 590px;
+    margin-left: 600px;
 
     #reproductor {
-        height: 400px;
+        height: 320px;
+        .descripcion { display: none; }
+        .descripcion a { text-decoration: underline; }
     }
 
     #publicidad {
-        width: 350px;
-        height: 280px;
-        background-image: url(../resources/img/publicidad.jpg);
+        margin-left: 25px;
+        width: 300px;
+        height: 250px;
+        position: absolute;
+        /*z-index: 10000;*/
+        background-image: url(../resources/img/publicidad300x250.gif);
     }
 }
 
@@ -106,7 +112,7 @@ a:hover {
 
 #menu_tipos {
     font-size: 1.2em;
-    background: black url(../resources/img/fondo_menu_tipos.png) repeat-x;
+    background: @color_frente url(../resources/img/fondo_menu_tipos.png) repeat-x;
     height: 32px;
 
     ul {

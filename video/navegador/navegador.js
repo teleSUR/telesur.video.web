@@ -25,11 +25,11 @@ $.Controller('Video.Navegador',
     navegador_controller : $("#navegador").controller(),
     current_date: new Date(),
 
-    cargarGruposEnPasos : 2,
+    cargarGruposEnPasos : 1,
     ultimoMostradoDefault: 4,
 
     tipos: {
-        'noticia': ['secciones', 'regiones', 'fechas', 'popularidad'],
+        'noticia': ['secciones', 'regiones', 'corresponsales', 'fechas', 'popularidad'],
         'entrevista': ['secciones', 'regiones', 'fechas', 'popularidad'],
         'programa': ['programa', 'fechas'],
         'documental': ['secciones', 'fechas'],
@@ -37,43 +37,46 @@ $.Controller('Video.Navegador',
     },
 
     modos: {
-        secciones: { nombre: 'secciones' },
-        regiones: { nombre: 'regiones' },
-        fechas: { nombre: 'cronología'},
-        programa: { nombre: 'programas'},
-        popularidad: { nombre: 'populares'}
+        secciones: { nombre: {es: 'secciones', en: 'categories', pt: 'secciones'} },
+        regiones: { nombre: {es: 'regiones', en: 'regions', pt: 'regiones'} },
+        fechas: { nombre: {es: 'cronología', en: 'timeline', pt: 'cronología'} },
+        programa: { nombre: {es: 'programas', en: 'shows', pt: 'programas'} },
+        popularidad: { nombre: {es: 'pupulares', en: 'popular', pt: 'populares'} },
+        corresponsales: { nombre: {es: 'corresponsales', en: 'correspondants', pt: 'corresponsales'} }
     },
 
     regiones: ['america-latina', 'america', 'europa', 'asia', 'africa', 'oceania'],
 
-    fecha_params: {
+    regiones_nombres: [{es: 'Latinoamérica', en: 'Latin America', 'América', 'Europa', 'Asia', 'África', 'Oceanía'],
+
+    fecha_params: { // $(document).controller().idioma
         hoy: {
-            nombre : 'Hoy',
+            nombre : {es: 'Hoy', en: 'Today', pt: 'Hoy'},
             params : { tiempo: 'dia' },
             dias_diff : { hasta: 0  }
         },
         ayer: {
-            nombre : 'Ayer',
+            nombre : {es: 'Ayer', en: 'Yesterday', pt: 'Ayer'},
             params : { tiempo: 'dia' },
             dias_diff : { hasta: 1 }
         },
         ultima_semana: {
-            nombre : 'Última semana',
+            nombre : {es: 'Última semana', en: 'Last week', pt: 'Última semana'},
             params : { tiempo: 'semana' },
             dias_diff : { hasta: 2 }
         },
         ultimo_mes: {
-            nombre : 'Último mes',
+            nombre : {es: 'Último mes', en: 'Last month', pt: 'Último mes'},
             params : { tiempo: 'mes' },
             dias_diff : { hasta: 9 }
         },
         ultimo_ano: {
-            nombre : 'Último año',
+            nombre : {es: 'Último año', en: 'Last year', pt: 'Último año'},
             params : { tiempo: 'ano' },
             dias_diff : { hasta: 39 }
         },
         siempre: {
-            nombre : 'Siempre',
+            nombre : {es: 'Siempre', en: 'Always', pt: 'Siempre'},
             params : { },
             dias_diff : { hasta: 0 }
         }
@@ -93,35 +96,47 @@ $.Controller('Video.Navegador',
 /** @Prototype */
 {
 	init : function() {
+
         steal.dev.log('{naegador} Inicializando Video.Navegador para tipo: ' + this.options.tipo_clip.slug);
         this.element.html("//video/navegador/views/init.ejs", {});
 
-        this.paginacion = {
-            primeroMostrado: 1,
-            ultimoMostrado: this.constructor.ultimoMostradoDefault
-        };
+        // this.paginacion = {
+        //          primeroMostrado: 1,
+        //          ultimoMostrado: this.constructor.ultimoMostradoDefault
+        //      };
+     
 
-        this.options.modo = $.route.attr("modo");
-
-        // detectar cuando el scroll llega al final
-        // para cargar más grupos automáticamente
-        var self = this;
-        $(window).scroll(function(){
-            if  ($(window).scrollTop() == $(document).height() - $(window).height()){
-                if (self) {
-                    self.element.find('.mas_grupos').addClass('cargando');
-                    self.mostrarMasGrupos();
+        if (this.options.tipo_clip != 'busqueda') {
+            // detectar cuando el scroll llega al final
+            // para cargar más grupos automáticamente
+            var self = this;
+            $(window).scroll(function(){
+                if ($(window).scrollTop() == $(document).height() - $(window).height()){
+                    if (self) {
+                        self.element.find('.mas_grupos').addClass('cargando');
+                        self.mostrarMasGrupos();
+                    } else {alert('no self en window/scroll')}
                 }
-            }
-        });
+            });
+
+
+        } else {
+
+        }
+
 
         // callbacks de rutas
-        $.route.delegate('v2', 'set', this.callback('modoSeleccionado'));
+
         //$.route.delegate('v2', 'remove', this.callback('modoSeleccionado'));
 
         // inicia proceso para llenar los datos en el navegador,
         // trae los grupos a mostrar y éstos los clips a mostrar
+        $.route.delegate('v2', 'set', this.callback('modoSeleccionado'));
+        //this.options.modo = $.route.attr("v2");
+
         this.cambiarTipo(this.options.tipo_clip);
+
+
 	},
 
 
@@ -129,76 +144,135 @@ $.Controller('Video.Navegador',
         this.options.tipo_clip = tipo_clip;
         this.options.modo = $.route.attr('v2');
 
-        var menu_modos = this.element.find('.menu_modos');
+        if (tipo_clip != 'busqueda') {
 
-        // actualizar botón con el nombre del tipo en plural
-        menu_modos.find('.tipo').html(tipo_clip.nombre_plural);
+            var menu_modos = this.element.find('.menu_modos');
 
-        // Consturir menú de modos
-        menu_modos.empty();
+            // actualizar botón con el nombre del tipo en plural
+            menu_modos.find('.tipo').html(tipo_clip.nombre_plural);
 
-        var modos = this.constructor.modos;
-        $.each(this.constructor.tipos[tipo_clip.slug], function(i, modo) {
-            $('<a>').attr('href', $.route.url({vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}))
-                .html(modos[modo].nombre.toUpperCase())
-                .addClass(modo)
-                .appendTo(menu_modos);
-        });
+            // Consturir menú de modos
+            menu_modos.empty();
 
 
-        // Si ya había un modo seleccionado, checar si el nuevo tipo soporta
-        // el mismo modo, si no, cambiar el modo al default (el primero)
-        var modos_disponibles = this.constructor.tipos[tipo_clip.slug];
-        var modo_adecuado = (!this.options.modo || modos_disponibles.indexOf(this.options.modo) == -1) ? modos_disponibles[0] : this.options.modo;
+            //alert($.route.url({vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}));
+            var modos = this.constructor.modos;
+            $.each(this.constructor.tipos[tipo_clip.slug], function(i, modo) {
+                $('<a>').attr('href', $.route.url({idioma: $(document).controller().idioma, vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}))
+                    .html(modos[modo].nombre[$(document).controller().idioma].toUpperCase())
+                    .addClass(modo)
+                    .appendTo(menu_modos);
+            });
 
-        // Cambiar la ruta si es necesario (puede activar callbacks en $.route)
-        $.route.attrs({vista : Video.Pagina.vistas.lista.nombre, v1 : tipo_clip.slug, v2: modo_adecuado});
+
+
+            // Si ya había un modo seleccionado, checar si el nuevo tipo soporta
+            // el mismo modo, si no, cambiar el modo al default (el primero)
+            var modos_disponibles = this.constructor.tipos[tipo_clip.slug];
+            var modo_adecuado = (!this.options.modo || modos_disponibles.indexOf(this.options.modo) == -1) ? modos_disponibles[0] : this.options.modo;
+
+            // Cambiar la ruta si es necesario (puede activar callbacks en $.route)
+
+            //location.hash = $.route.url({idioma: $(document).controller().idioma, vista : Video.Pagina.vistas.lista.nombre, v1 : tipo_clip.slug, v2: modo_adecuado});
+            $.route.attrs({idioma: $(document).controller().idioma, vista : Video.Pagina.vistas.lista.nombre, v1 : tipo_clip.slug, v2: modo_adecuado});
+        } else {
+            //location.hash = $.route.url({idioma: $(document).controller().idioma, vista : Video.Pagina.vistas.lista.nombre, v1 : 'busqueda', v2: this.options.modo});
+            $.route.attrs({idioma: $(document).controller().idioma, vista : Video.Pagina.vistas.lista.nombre, v1 : 'busqueda', v2: this.options.modo});
+        }
+
+        // ********** READY último **********
+        $.route.ready(true);
     },
 
     cargarModoSecciones : function() {
         // crear e intentar poblar store de cookie para categorias
-        this.categorias = new Video.Models.Categoria.CookieList([]).retrieve("categorias");
+//        this.categorias = new Video.Models.Categoria.CookieList([]).retrieve("categorias");
         // solicitar tipos en caso de que no estén en cache
         // en cualquier caso el control pasa a this.tiposRecibidos
-        if (this.categorias.length > 0) {
-            steal.dev.log('{naegador} usando categorías en store de cookie');
-            this.agrupadoresRecibidos('secciones', this.categorias);
-        } else {
-            steal.dev.log('{naegador} sin categorías en store de cookie, solicitando a servicio');
-            var self = this;
-            Video.Models.Categoria.findAll({}, function(categorias) {
-                if (self) {
-                    steal.dev.log('{naegador} añadiendo categorías recibidos a store de cookie');
-                    self.categorias = new Video.Models.Categoria.CookieList(categorias).store("categorias");
-                    self.agrupadoresRecibidos('secciones', self.categorias);
-                } else {
-                    steal.dev.log('{naegador} No se pudieron recibir categorías, no existe objeto navegador');
-                }
-            });
-        }
+//        if (this.categorias.length > 0) {
+//            steal.dev.log('{naegador} usando categorías en store de cookie');
+//            this.agrupadoresRecibidos('secciones', this.categorias);
+//        } else {
+//            steal.dev.log('{naegador} sin categorías en store de cookie, solicitando a servicio');
+//            var self = this;
+//            Video.Models.Categoria.findAll({}, function(categorias) {
+//                if (self) {
+//                    steal.dev.log('{naegador} añadiendo categorías recibidos a store de cookie');
+////                    self.categorias = new Video.Models.Categoria.CookieList(categorias).store("categorias");
+//                    self.categorias = categorias;
+//                    self.agrupadoresRecibidos('secciones', self.categorias);
+//                } else {
+//                    steal.dev.log('{naegador} No se pudieron recibir categorías, no existe objeto navegador');
+//                }
+//            });
+////        }
+
+        var categorias_nombres = {
+            'politica': { es: 'política', en: 'politics', pt: 'política' },
+            'economia': { es: 'economía', en: 'economy', pt: 'política' },
+            'medio-ambiente': { es: 'medio ambiente', en: 'environment', pt: 'medio ambiente' },
+            'ciencia': { es: 'ciencia', en: 'politics', pt: 'science' },
+            'cultura': { es: 'cultura', en: 'politics', pt: 'culture' },
+            'deportes': { es: 'deportes', en: 'politics', pt: 'sports' }
+        }, idioma = $(document).controller().idioma;
+        this.categorias = [
+            new Video.Models.Categoria({ slug: 'politica', nombre: categorias_nombres['politica'][idioma]}),
+            new Video.Models.Categoria({ slug: 'economia', nombre: categorias_nombres['economia'][idioma]}),
+            new Video.Models.Categoria({ slug: 'medio-ambiente', nombre: categorias_nombres['medio-ambiente'][idioma]}),
+            new Video.Models.Categoria({ slug: 'ciencia', nombre: categorias_nombres['ciencia'][idioma]}),
+            new Video.Models.Categoria({ slug: 'cultura', nombre: categorias_nombres['cultura'][idioma]}),
+            new Video.Models.Categoria({ slug: 'deportes', nombre: categorias_nombres['deportes'][idioma]})
+        ];
+
+        this.agrupadoresRecibidos('secciones', this.categorias);
     },
 
     cargarModoProgramas : function() {
         // crear e intentar poblar store de cookie para categorias
-        this.programas = new Video.Models.Categoria.CookieList([]).retrieve("programas");
+//        this.programas = new Video.Models.Categoria.CookieList([]).retrieve("programas");
         // solicitar tipos en caso de que no estén en cache
         // en cualquier caso el control pasa a this.tiposRecibidos
-        if (this.programas.length > 0) {
-            steal.dev.log('{naegador} usando categorías en store de cookie');
-            this.agrupadoresRecibidos('programas', this.programas);
-        } else {
+//        if (this.programas.length > 0) {
+//            steal.dev.log('{naegador} usando categorías en store de cookie');
+//            this.agrupadoresRecibidos('programas', this.programas);
+//        } else {
             steal.dev.log('{naegador} sin programas en store de cookie, solicitando a servicio');
             var self = this;
             Video.Models.Programa.findAll({}, function(programas) {
                 if (self) {
                     steal.dev.log('{naegador} añadiendo programas recibidos a store de cookie');
-                    self.programas = new Video.Models.Programa.CookieList(programas).store("programas");
+//                    self.programas = new Video.Models.Programa.CookieList(programas).store("programas");
+                    self.programas = programas;
                     self.agrupadoresRecibidos('programas', self.programas);
                 } else {
                     steal.dev.log('{naegador} No se pudieron recibir programas, no existe objeto navegador');
                 }
             });
-        }
+//        }
+    },
+
+    cargarModoCorresponsales : function() {
+        // crear e intentar poblar store de cookie para categorias
+//      this.corresponsales = new Video.Models.Corresponsal.CookieList([]).retrieve('corresponsales');
+        // solicitar tipos en caso de que no estén en cache
+        // en cualquier caso el control pasa a this.tiposRecibidos
+//        if (this.corresponsales.length > 0) {
+//            steal.dev.log('{naegador} usando corresponsales en store de cookie');
+//            this.agrupadoresRecibidos('corresponsales', this.corresponsales);
+//        } else {
+            steal.dev.log('{naegador} sin corresponsales en store de cookie, solicitando a servicio');
+            var self = this;
+            Video.Models.Corresponsal.findAll({ultimo:200}, function(corresponsales) {
+                if (self) {
+                    steal.dev.log('{naegador} añadiendo corresponsales recibidos a store de cookie');
+//                    self.corresponsales = new Video.Models.Corresponsal.CookieList(corresponsales).store('corresponsales');
+                    self.corresponsales = corresponsales;
+                    self.agrupadoresRecibidos('corresponsales', self.corresponsales);
+                } else {
+                    steal.dev.log('{naegador} No se pudieron recibir corresponsales, no existe objeto navegador');
+                }
+            });
+//        }
     },
 
     /**
@@ -271,6 +345,7 @@ $.Controller('Video.Navegador',
             fecha_params = this.constructor.fecha_params,
             getFechaParamsFnc = this.constructor.callback('getFechaParams'),// this.constructor.getFechaParams,
             base_options = { titulo : 'grupo', params : { tipo: tipo.slug }};
+            self = this;
 
         switch (modo) {
             case 'programas':
@@ -282,10 +357,19 @@ $.Controller('Video.Navegador',
                 };
                 break;
 
+            case 'corresponsales':
+                optionsFnc = function(corresponsal) {
+                    return $.extend(true, {}, base_options, {
+                        titulo: corresponsal.nombre,
+                        params: { corresponsal: corresponsal.slug }
+                    });
+                };
+                break;
+
             case 'regiones':
                 optionsFnc = function(region) {
                     return $.extend(true, {}, base_options, {
-                        titulo : region,
+                        titulo :  self.constructor.regiones_nombres[self.constructor.regiones.indexOf(region)],
                         params : { region: region }
                     });
                 };
@@ -294,7 +378,7 @@ $.Controller('Video.Navegador',
             case 'fechas':
                 optionsFnc = function(fecha) {
                     return $.extend(true, {}, base_options, {
-                        titulo : fecha_params[fecha].nombre,
+                        titulo : fecha_params[fecha].nombre[$(document).controller().idioma],
                         params : $.extend({}, getFechaParamsFnc(fecha))
                     });
                 };
@@ -303,7 +387,7 @@ $.Controller('Video.Navegador',
             case 'popularidad':
                 optionsFnc = function(tiempo) {
                     return $.extend(true, {}, base_options, {
-                        titulo : fecha_params[tiempo].nombre,
+                        titulo : fecha_params[tiempo].nombre[$(document).controller().idioma],
                         params : $.extend({ orden: 'popularidad'}, getFechaParamsFnc(tiempo))
                     });
                 };
@@ -314,6 +398,24 @@ $.Controller('Video.Navegador',
                     return $.extend(true, {}, base_options, {
                         titulo : categoria.nombre,
                         params : { categoria: categoria.slug }
+                    });
+                };
+                break;
+            case 'busqueda':
+                optionsFnc = function(texto) {
+                    return $.extend(true, {}, {
+                        titulo : 'Búsqueda: ' + texto,
+                        numFilasMostradasDefault: 5,
+                        params : { texto: texto }
+                    });
+                };
+                break;
+            case 'todos':
+                optionsFnc = function() {
+                    return $.extend(true, {}, base_options, {
+                        titulo : 'todos',
+                        numFilasMostradasDefault: 10
+
                     });
                 };
                 break;
@@ -355,43 +457,55 @@ $.Controller('Video.Navegador',
     modoSeleccionado : function(ev, modo, modo_anterior) {
         // si no hay un modo especificado, usar default para el tipo
         if (!modo) {
-            $.route.attr("v2", this.constructor.tipos[this.options.tipo_clip.slug][0]);
+            $.route.attrs({idioma: $(document).controller().idioma, vista: 'lista', v1:this.options.tipo_clip, v2: this.constructor.tipos[this.options.tipo_clip.slug][0]});
             return;
         }
 
-        this.element.find('.grupos').empty();
+        $(document).controller().modo = modo;
 
+        this.element.find('.grupos').empty();
         this.options.modo = modo;
 
-        // ajustar menú a nuevo estado
-        this.element.find('.menu_modos a.'+modo).addClass('activo').siblings().removeClass('activo');
+        if (this.options.tipo_clip != 'busqueda'){
 
+            // ajustar menú a nuevo estado
+            this.element.find('.menu_modos a.'+modo).addClass('activo').siblings().removeClass('activo');
 
+            this.paginacion = {
+                primeroMostrado: 1,
+                ultimoMostrado: this.constructor.ultimoMostradoDefault
+            };
 
-        this.paginacion = {
-            primeroMostrado: 1,
-            ultimoMostrado: this.constructor.ultimoMostradoDefault
-        };
-
-        switch (modo) {
-            case 'secciones':
-                this.cargarModoSecciones();
-                break;
-            case 'programa':
-                this.cargarModoProgramas();
-                break;
-            case 'regiones':
-                this.agrupadoresRecibidos(modo, this.constructor.regiones);
-                break;
-            case 'fechas':
-                this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
-                break;
-            case 'popularidad':
-                this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
-                break;
-            default:
-                steal.dev.warn('Modo no reconocido: ' + modo);
+            switch (modo) {
+                case 'secciones':
+                    this.cargarModoSecciones();
+                    break;
+                case 'programa':
+                    this.cargarModoProgramas();
+                    break;
+                case 'corresponsales':
+                    this.cargarModoCorresponsales();
+                    break;
+                case 'regiones':
+                    this.agrupadoresRecibidos(modo, this.constructor.regiones);
+                    break;
+                case 'fechas':
+                    this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
+                    break;
+                case 'popularidad':
+                    this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
+                    break;
+                case 'todos':
+                    this.agrupadoresRecibidos('todos', ['todos']);
+                    break;
+                default:
+                    steal.dev.warn('Modo no reconocido: ' + modo);
+            }
+        } else {
+            // búsqueda
+            this.agrupadoresRecibidos('busqueda', [$.route.attr('v2')]);
         }
+
     }
 
 })

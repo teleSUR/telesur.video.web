@@ -12,6 +12,8 @@ steal(
             steal.dev.log('jQuery: ' + $().jquery);
 
             $(document).video_pagina();
+
+            
         });
 
 	});
