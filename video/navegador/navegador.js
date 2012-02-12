@@ -12,6 +12,26 @@ steal('../resources/jquery.dateFormat.js')
 .then('jquery/controller','jquery/view/ejs')
 	.then( './views/init.ejs', function($) {
 
+Object.keys = Object.keys || function(o) {
+    var result = [];
+    for(var name in o) {
+        if (o.hasOwnProperty(name))
+            result.push(name);
+    }
+    return result;
+};
+
+if(!Array.indexOf){
+    Array.prototype.indexOf = function(obj){
+        for(var i=0; i<this.length; i++){
+            if(this[i]==obj){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
 /**
  * @class Video.Navegador
  */
@@ -19,35 +39,44 @@ $.Controller('Video.Navegador',
 /** @Static */
 {
 	defaults : {
+        tipo_clip: new Video.Models.TipoClip({slug: 'noticia', nombre_plural: 'noticias'}),
+        modo: 'secciones'
     },
 
     pagina_controller : $("#pagina").controller(),
     navegador_controller : $("#navegador").controller(),
     current_date: new Date(),
 
-    cargarGruposEnPasos : 1,
+    cargarGruposEnPasos : 2,
     ultimoMostradoDefault: 4,
 
     tipos: {
-        'noticia': ['secciones', 'regiones', 'corresponsales', 'fechas', 'popularidad'],
-        'entrevista': ['secciones', 'regiones', 'fechas', 'popularidad'],
+        'noticia': ['fechas', 'secciones', 'regiones', 'corresponsales', 'popularidad'],
+        'entrevista': ['fechas', 'secciones', 'regiones', 'popularidad'],
         'programa': ['programa', 'fechas'],
         'documental': ['secciones', 'fechas'],
         'reportaje': ['secciones', 'fechas']
     },
 
     modos: {
-        secciones: { nombre: {es: 'secciones', en: 'categories', pt: 'secciones'} },
-        regiones: { nombre: {es: 'regiones', en: 'regions', pt: 'regiones'} },
-        fechas: { nombre: {es: 'cronología', en: 'timeline', pt: 'cronología'} },
+        secciones: { nombre: {es: 'secciones', en: 'categories', pt: 'seções'} },
+        regiones: { nombre: {es: 'regiones', en: 'regions', pt: 'regiões'} },
+        fechas: { nombre: {es: 'cronología', en: 'timeline', pt: 'cronologia'} },
         programa: { nombre: {es: 'programas', en: 'shows', pt: 'programas'} },
-        popularidad: { nombre: {es: 'pupulares', en: 'popular', pt: 'populares'} },
-        corresponsales: { nombre: {es: 'corresponsales', en: 'correspondants', pt: 'corresponsales'} }
+        popularidad: { nombre: {es: 'populares', en: 'popular', pt: 'populares'} },
+        corresponsales: { nombre: {es: 'corresponsales', en: 'correspondants', pt: 'correspondentes'} }
     },
 
     regiones: ['america-latina', 'america', 'europa', 'asia', 'africa', 'oceania'],
 
-    regiones_nombres: [{es: 'Latinoamérica', en: 'Latin America', 'América', 'Europa', 'Asia', 'África', 'Oceanía'],
+    regiones_nombres: [
+        { es: 'Latinoamérica', en: 'Latin America', pt: 'américa latina' },
+        { es: 'América', en: 'America', pt: 'América' },
+        { es: 'Europa', en: 'Europe', pt: 'Europa' },
+        { es: 'Asia', en: 'Asia', pt: 'Ásia' },
+        { es: 'África', en: 'Africa', pt: 'África' },
+        { es: 'Oceanía', en: 'Australia', pt: 'Oceania' }
+    ],
 
     fecha_params: { // $(document).controller().idioma
         hoy: {
@@ -66,17 +95,17 @@ $.Controller('Video.Navegador',
             dias_diff : { hasta: 2 }
         },
         ultimo_mes: {
-            nombre : {es: 'Último mes', en: 'Last month', pt: 'Último mes'},
+            nombre : {es: 'Último mes', en: 'Last month', pt: 'Último mês'},
             params : { tiempo: 'mes' },
             dias_diff : { hasta: 9 }
         },
         ultimo_ano: {
-            nombre : {es: 'Último año', en: 'Last year', pt: 'Último año'},
+            nombre : {es: 'Último año', en: 'Last year', pt: 'Último ano'},
             params : { tiempo: 'ano' },
             dias_diff : { hasta: 39 }
         },
         siempre: {
-            nombre : {es: 'Siempre', en: 'Always', pt: 'Siempre'},
+            nombre : {es: 'Siempre', en: 'Always', pt: 'sempre'},
             params : { },
             dias_diff : { hasta: 0 }
         }
@@ -111,6 +140,9 @@ $.Controller('Video.Navegador',
             // para cargar más grupos automáticamente
             var self = this;
             $(window).scroll(function(){
+                if (!$('#abajo').is(':visible')) {
+                    $('#abajo').fadeIn('slow');
+                }
                 if ($(window).scrollTop() == $(document).height() - $(window).height()){
                     if (self) {
                         self.element.find('.mas_grupos').addClass('cargando');
@@ -209,11 +241,11 @@ $.Controller('Video.Navegador',
 
         var categorias_nombres = {
             'politica': { es: 'política', en: 'politics', pt: 'política' },
-            'economia': { es: 'economía', en: 'economy', pt: 'política' },
-            'medio-ambiente': { es: 'medio ambiente', en: 'environment', pt: 'medio ambiente' },
-            'ciencia': { es: 'ciencia', en: 'politics', pt: 'science' },
-            'cultura': { es: 'cultura', en: 'politics', pt: 'culture' },
-            'deportes': { es: 'deportes', en: 'politics', pt: 'sports' }
+            'economia': { es: 'economía', en: 'economy', pt: 'economia' },
+            'medio-ambiente': { es: 'medio ambiente', en: 'environment', pt: 'meio ambiente' },
+            'ciencia': { es: 'ciencia', en: 'science', pt: 'ciência' },
+            'cultura': { es: 'cultura', en: 'culture', pt: 'cultura' },
+            'deportes': { es: 'deportes', en: 'sports', pt: 'esporte' }
         }, idioma = $(document).controller().idioma;
         this.categorias = [
             new Video.Models.Categoria({ slug: 'politica', nombre: categorias_nombres['politica'][idioma]}),
@@ -289,7 +321,7 @@ $.Controller('Video.Navegador',
         // Agregar grupos "desactivados" al DOM, estos se cargarán hasta el evento show() )
         steal.dev.log('{naegador} Creando y agregando '+grupos.length+' controladores de grupo');
         $.each(grupos, function(i, grupo) {
-            console.log('se acaba de crear controlador para grupo: '+ grupo);
+            steal.dev.log('se acaba de crear controlador para grupo: '+ grupo);
             var grupo_el = $('<div>').hide().video_grupo(paramsFnc(grupo));
 
             // si el agrupamiento es con algún modelo, guardarlo en .model()
@@ -344,7 +376,7 @@ $.Controller('Video.Navegador',
             tipo = this.options.tipo_clip,
             fecha_params = this.constructor.fecha_params,
             getFechaParamsFnc = this.constructor.callback('getFechaParams'),// this.constructor.getFechaParams,
-            base_options = { titulo : 'grupo', params : { tipo: tipo.slug }};
+            base_options = { titulo : 'grupo', params : { tipo: tipo.slug }},
             self = this;
 
         switch (modo) {
@@ -369,7 +401,7 @@ $.Controller('Video.Navegador',
             case 'regiones':
                 optionsFnc = function(region) {
                     return $.extend(true, {}, base_options, {
-                        titulo :  self.constructor.regiones_nombres[self.constructor.regiones.indexOf(region)],
+                        titulo :  self.constructor.regiones_nombres[self.constructor.regiones.indexOf(region)][$(document).controller().idioma],
                         params : { region: region }
                     });
                 };

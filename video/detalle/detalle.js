@@ -26,35 +26,47 @@ $.Controller('Video.Detalle',
 	init : function(){
 		steal.dev.log('inicializando controlador Detalle');
 
-        // cargar HTML
-        this.element.html("//video/detalle/views/init.ejs", {clip: this.options.clip});
+        this.position = 0;
 
-        this.element.find('.sociales').append('<div class="fondo_sociales" />');
-
-        Video.Models.Clip.findAll({ultimo: 3, relacionados: this.options.clip.slug}, this.callback('relacionadosRecibidos'));
-
-        //this.initPlayer();
+//        var mini_player = jwplayer('mediaplayer');
+//        if (mini_player) {
+//            this.position = mini_player.getPosition();
+//            mini_player.stop();
+//            //$('#mediaplayer').hide();
+//        }
 	},
 
     show: function() {
+        // cargar HTML
+        this.element.html("//video/detalle/views/init.ejs", {clip: this.options.clip});
+
         //this.initPlayer();
+        if (!($('#reproductor').controller().clip_cargado)) {
+            $('#reproductor').controller().cambiarClip(this.options.clip);
+        }
+
+        Video.Models.Clip.findAll({detalle: 'completo', ultimo: 3, relacionados: this.options.clip.slug}, this.callback('relacionadosRecibidos'));
     },
 
     initPlayer : function() {
+        steal.dev.log('inicializando controlador Detalle');
         // inicializar player
         jwplayer('standalone_player').setup({
-            //'skin': this.options.player_skin_src,
+            'skin' : 'resources/mediaplayer/skins/glow/glow.zip',
             'width': 560,
             'height': 320,
             'controlbar': 'bottom',
             'wmode': 'window',
-            'file': this.options.clip.archivo_url,
+            'file': this.options.clip.archivo_subtitulado_url ? this.options.clip.archivo_subtitulado_url : this.options.clip.archivo_url,
+
             'image': this.options.clip.thumbnail_grande,
+            'start' : this.position,
+            'autoplay' : this.position > 0,
             'modes': [
                 {
                     type: 'flash',
-                    src: 'resources/mediaplayer/player.swf'
-                    //config: { 'provider': 'rtmp' }
+                    src: 'resources/mediaplayer/player.swf',
+                    config: { 'provider': 'http', 'http.startparam':'start' }
                 },
                 {
                     type: 'html5',
@@ -66,6 +78,18 @@ $.Controller('Video.Detalle',
                 }
             ]
         });
+
+        var url = this.options.clip.navegador_url;
+        $.getScript('http://s7.addthis.com/js/250/addthis_widget.js?pubid=ra-4f2d726c065de481&domready=1', {cache: true}, function() {
+            //addthis.toolbox("#sociales1");
+            //addthis.init();
+
+            addthis.toolbox("#sociales1", {
+                ui_language: 'es',
+                url: url
+            });
+
+        });
     },
 
     '.regresar click' : function(ev, el) {
@@ -74,18 +98,37 @@ $.Controller('Video.Detalle',
         var v1 = $(document).controller().tipo_slug || 'noticia';
         var v2 = $(document).controller().modo || undefined;
 
-        document.location.href = $.route.url({idioma: $(document).controller().idioma, vista: 'lista', v1: v1, v2: v2});
+        var mini_player = jwplayer('mediaplayer');
+        if (mini_player) {
+            $('#player_wrapper').css({
+                height: 230, width: 350, left: 0, top: 0
+            });
+//            var standalone = jwplayer('standalone_player');
+//            if (standalone) {
+//                mini_player.seek(standalone.getPosition());
+//                $('#mediaplayer').show();
+//                if (standalone.getPosition() > 0) {
+//                    mini_player.play();
+//                }
+        } else {
+           // $('#mediaplayer').show();
+        }
+
+        location.href = $.route.url({idioma: $(document).controller().idioma, vista: 'lista', v1: v1, v2: v2});
+
     },
 
     '.nav click' : function() {
         var rand = Math.floor(Math.random()*11) + 1
         this.element.find('.player img').fadeOut();
-        Video.Models.Clip.findAll({primero: rand,  ultimo: rand, tipo: $(document).controller().tipo_slug }, this.callback('navRecibido'));
+        Video.Models.Clip.findAll({detalle: 'completo', primero: rand,  ultimo: rand, tipo: $(document).controller().tipo_slug }, this.callback('navRecibido'));
     },
 
     navRecibido : function(clips) {
-        this.update({clip: clips[0]});
-        this.init();
+        if (this.element) {
+            this.options.clip = clips[0];
+            this.show();
+        }
     },
 
     /**
@@ -94,13 +137,49 @@ $.Controller('Video.Detalle',
     relacionadosRecibidos : function(clips) {
         if (!this.element) return;
 
-        this.initPlayer();
-
         var relacionados_elem = this.element.find('.relacionados');
         clips.each(function(i, clip) {
             $('<div />').video_clip({clip: clip}).appendTo(relacionados_elem);
         });
 
+    },
+
+    /**
+     * Reproduce en clip especificado en el player
+     * Si actualmente se está reproduciendo el mismo clip, sólo se pausa/despausa
+     *
+     * @param clip
+     */
+    cambiarClip: function(clip, sin_autoplay) {
+
+        var player_id = 'standalone_player';
+
+        this.clip_cargado = true;
+        // si se intenta cambiar al mismo clip, sólo pausar/despausar
+        if (this.options.clip == clip && !sin_autoplay) {
+            return jwplayer(player_id).pause();
+        }
+
+        // cambiar a nuevo clip
+        this.options.clip = clip;
+        this.show();
+
+//
+//        // determinar parámetros para player
+//        var options = { image: this.clip.thumbnail_mediano };
+//        if (this.clip.metodo_preferido == 'XXXXXstreaming') {
+//            options = $.extend(options, { file: clip.streaming.rtmp_file, streamer: clip.streaming.rtmp_server, 'rtmp.subscribe': true });
+//        } else {
+//            options = $.extend(options, { file: clip.audio_url });
+//        }
+//
+//        var player_id = ($('.video_detalle').length == 0) ? 'mediaplayer' : 'standalone_player';
+//
+//        jwplayer(player_id).load(options);
+//        // cargar clip en player
+//        if (!sin_autoplay) {
+//            jwplayer().play();
+//        }
     }
 
 })
