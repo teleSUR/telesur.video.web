@@ -268,7 +268,7 @@
                     }
                     return retValue;
                 } catch (e) {
-                    console.log(e);
+                    steal.dev.warn(e);
                     return value;
                 }
             }
