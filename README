@@ -1,14 +1,15 @@
-Hay tres aplicaciones
-
 - telesur-video <- extiende a video
 - telesur-web  <- extiende a video
 - video <- aplicación genérica
 
 
+URLs de producción:
+
+Frontend:  http://multimedia.tlsur.net/media/telesur.video.web/telesur-web/
+Admin:  http://multimedia.tlsur.net/media/telesur.video.web/telesur-admin/
+
+
 URL's staging:
 
-(modo producción)
-http://multimedia.tlsur.net/media/telesur.video.web/video/
-
-(modo desarrollo)
-http://multimedia.tlsur.net/media/telesur.video.web/video/video.html
+Frontend:  http://multimedia.tlsur.net/media/telesur.video.web/telesur-web/telesur-web.html
+Admin: Admin:  http://multimedia.tlsur.net/media/telesur.video.web/telesur-admin/telesur-admin.html
