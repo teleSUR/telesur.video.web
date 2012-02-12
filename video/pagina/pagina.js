@@ -100,7 +100,8 @@ $.Controller('Video.Pagina',
                 break;
 
             case this.constructor.vistas.video.nombre:
-                //this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.45}) });
+//                this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.45}) });
+                this.element.find('#navegador').each(function() { $(this).css({opacity: 0.45}) });
                 return this.videoSeleccionado(ev, val, oldval);
 
 //            case this.constructor.vistas.busqueda.nombre:
@@ -255,10 +256,12 @@ $.Controller('Video.Pagina',
             $('#idioma').slideUp('slow');
             $('#centro').animate({'padding-top': '-=50px'}, 'slow');
             $('#lado').animate({'padding-top': '-=50px'}, 'slow');
+            $('.video_detalle').animate({'padding-top': '-=50px'}, 'slow');
         } else {
             $('#idioma').slideDown('slow');
             $('#centro').animate({'padding-top': '+=50px'}, 'slow');
             $('#lado').animate({'padding-top': '+=50px'}, 'slow');
+            $('.video_detalle').animate({'padding-top': '+=50px'}, 'slow');
         }
     },
 

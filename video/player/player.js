@@ -87,7 +87,7 @@ $.Controller('Video.Player',
             //addthis.init();
             addthis.toolbox("#sociales0", {
                 url: clip.navegador_url,
-                ui_language: 'es',
+                ui_language: $(document).controller().idioma,
                 height: 25
             });
         });
