@@ -12,6 +12,10 @@ body {
     width: 960px;
     overflow: hidden;
     clear: both;
+
+    area {
+        cursor: pointer;
+    }
 }
 
 a {
@@ -50,8 +54,11 @@ a:hover {
     }
 }
 
+
 #idioma {
     display: none;
+
+    text-align: center;
 
     background: @color_frente;
     height: 50px;
@@ -87,7 +94,7 @@ a:hover {
 
     #reproductor {
         height: 320px;
-        .descripcion { display: none; }
+        /*.descripcion { display: none; }*/
         .descripcion a { text-decoration: underline; }
     }
 
@@ -98,10 +105,12 @@ a:hover {
         position: absolute;
         /*z-index: 10000;*/
         background-image: url(../resources/img/publicidad300x250.gif);
+        display: none !important;
     }
 }
 
 #abajo {
+    display: none; /* se muestra el scroll inicial */
     height: 38px;
     width: 960px;
     background: black url(../resources/img/fondo_pie.png) no-repeat;
