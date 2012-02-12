@@ -15,8 +15,9 @@ $.Controller('Video.Grupo',
         numFilasAlVerMas : 1,
         numFilasCache: 1,
         numFilasMostradasDefault: 1,
-        numFilasMaximo: 3,
-        params: { }
+        numFilasMaximo: 2,
+        params: { },
+        titulo: ''
     },
 
     listensTo: ['show'],
@@ -30,11 +31,19 @@ $.Controller('Video.Grupo',
 {
     'init': function() {
 
+        if (['hoy', 'today', 'latinoamérica', 'latin america'].indexOf(this.options.titulo.toLowerCase()) != -1) {
+            this.options.numFilasMostradasDefault++;
+            this.es_primero = true;
+        } else {
+            this.es_primero = false;
+        }
+
         // inicializar ariables para paginación
         this.primeroMostradoDefault = 1;
         this.ultimoMostradoDefault = this.options.numFilasMostradasDefault * this.options.numClipsPorFila;
         this.primeroConsultadoDefault = this.primeroMostradoDefault;
         this.ultimoConsultadoDefault = this.ultimoMostradoDefault + (this.options.numFilasCache * this.options.numClipsPorFila);
+
 
         // configurar deferred
         this.deferred = $.Deferred();
@@ -53,6 +62,7 @@ $.Controller('Video.Grupo',
             ultimoConsultado : this.ultimoConsultadoDefault,
             numFilasMostradas : this.options.numFilasMostradasDefault
         };
+
 
         // inicializar HTML
 		this.element.html("//video/grupo/views/init.ejs", {});
