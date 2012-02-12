@@ -1,4 +1,4 @@
-steal('steal/less').then('./player.less');
+    steal('steal/less').then('./player.less');
 steal({src: '../resources/mediaplayer/jwplayer.js', packaged: false})
 
 
@@ -33,15 +33,15 @@ $.Controller('Video.Player',
         // inicializar player
 		jwplayer('mediaplayer').setup({
             'skin': this.options.player_skin_src,
-            'width': this.options.player_width,
-            'height': this.options.player_height,
+            'width': '100%',// this.options.player_width,
+            'height': '100%', //this.options.player_height,
             'controlbar': 'bottom',
             'wmode': 'window',
             'modes': [
                 {
                     type: 'flash',
                     src: this.options.player_swf_src,
-                    config: { 'provider': 'rtmp' }
+                    config: { 'provider': 'http', 'http.startparam':'start' }
                 },
                 {
                     type: 'html5',
@@ -74,22 +74,34 @@ $.Controller('Video.Player',
 
         // actualizar HTML con datos del clip
         this.element.find('.titulo').html(clip.titulo);
-        var descripcion_html = clip.descripcion.substr(0, 40).replace(/\s*\w+$/, '') + '... <a href="#">(ver&nbsp;más)</a>';
+        var descripcion_html = clip.descripcion + '... <a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;más)</a>';
+//        var descripcion_html = clip.descripcion.substr(0, 150).replace(/\s*\w+$/, '') + '... <a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;más)</a>';
         this.element.find('.descripcion').html(descripcion_html);
         this.element.find('.opciones').show();
 
         // link
-        this.element.find('.opciones a').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
+        this.element.find('.opciones a.detalle').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
+
+        $.getScript('http://s7.addthis.com/js/250/addthis_widget.js?pubid=ra-4f2d726c065de481&domready=1', {cache: true}, function() {
+            //addthis.toolbox("#sociales1");
+            //addthis.init();
+            addthis.toolbox("#sociales0", {
+                url: clip.navegador_url,
+                ui_language: 'es',
+                height: 25
+            });
+        });
+
 
         // determinar parámetros para player
-        var options = { image: this.clip.thumbnail_mediano };
-        if (this.clip.metodo_preferido == 'streaming') {
+        var options = { image: this.clip.thumbnail_grande };
+        if (this.clip.metodo_preferido == 'XXXXXstreaming') {
             options = $.extend(options, { file: clip.streaming.rtmp_file, streamer: clip.streaming.rtmp_server, 'rtmp.subscribe': true });
         } else {
-            options = $.extend(options, { file: clip.archivo_url });
+            options = $.extend(options, { file: clip.archivo_subtitulado_url ? clip.archivo_subtitulado_url : clip.archivo_url });
         }
 
-        jwplayer().load(options);
+        jwplayer('mediaplayer').load(options);
         // cargar clip en player
         if (!sin_autoplay) {
             jwplayer().play();

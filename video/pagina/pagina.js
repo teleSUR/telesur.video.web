@@ -1,6 +1,8 @@
 steal('jquery/dom/route', 'jquery/lang/observe/delegate', 'mxui/layout/modal')
 .then('steal/less').then('./pagina.less')
 
+//.then({src: 'http://s7.addthis.com/js/250/addthis_widget.js#/pubid=ra-4f2d726c065de481&domready=1', packaged: false})
+
 .then('video/navegador', 'video/player', 'video/buscador')
 
 .then('jquery/controller','jquery/view/ejs')
@@ -98,7 +100,7 @@ $.Controller('Video.Pagina',
                 break;
 
             case this.constructor.vistas.video.nombre:
-                this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.3}) });
+                //this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.45}) });
                 return this.videoSeleccionado(ev, val, oldval);
 
 //            case this.constructor.vistas.busqueda.nombre:
@@ -110,16 +112,25 @@ $.Controller('Video.Pagina',
     vistaSeleccionada : function(ev, vista, vista_anterior) {
         if (!vista) return;
 
+        // inicializar player
+        this.element.find("#reproductor").video_player();
+
         switch (vista) {
             case this.constructor.vistas.lista.nombre:
             default:
                 //$.route.attr('vista', this.constructor.vistas.lista.nombre);
 
-                // inicializar player
 
-                this.element.find("#reproductor").video_player();
 
                 this.element.find("#publicidad").show();
+
+                if (!$('#reproductor').controller().clip_cargado) {
+                    Video.Models.Clip.findAll({detalle: 'completo', 'idioma': this.idioma, ultimo:1, tipo:'noticia'}, function(clips) {
+                        // cargar el primr clip al reporductor
+                        if ($('#reproductor')) $('#reproductor').controller().cambiarClip(clips[0], true);
+                        $('.video_models_clip_' + clips[0].slug).addClass('seleccionado');
+                    });
+                }
 
                 break;
 
@@ -194,8 +205,18 @@ $.Controller('Video.Pagina',
     videoSeleccionado : function(ev, slug, slug_anterior) {
         //alert('se seleccionó con slug' + $.route.attr('slug'));
         var that = this;
-        Video.Models.Clip.findOne({id: slug}, function(clips) {
-            $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#pagina')).fadeIn();
+        Video.Models.Clip.findOne({idioma: this.idioma, detalle: 'completo', id: slug}, function(clips) {
+
+            $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#pagina')).fadeIn(function() {
+                    $('#player_wrapper').css({
+                        'z-index': 999, opacity: 1,
+                        width: 515, height: 320, left: -304, top: 6, 'z-index': 1000000
+                    });
+                    $('#standalone_player img').fadeOut(function() { $(this).remove(); });
+                    //$('#standalone_player').css({width: 560, height: 320}).empty();
+           }).trigger('show');
+
+
             //that.element.find('#navegador').html(clip[0].titulo + '<img src="'+ clip[0].thumbnail_grande +'" />');
         })
     },
@@ -227,12 +248,22 @@ $.Controller('Video.Pagina',
         }
 
         // mostrar menú idiomas
-//        setTimeout(function() {
-//            $('#idioma').slideDown('slow');
-//            $('#centro').animate({'padding-top': '+=50px'}, 'slow');
-//            $('#lado').animate({'padding-top': '+=50px'}, 'slow');
-//        }, 3500)
+    },
 
+    toggleMenuIdioma : function() {
+        if ($('#idioma').is(':visible')) {
+            $('#idioma').slideUp('slow');
+            $('#centro').animate({'padding-top': '-=50px'}, 'slow');
+            $('#lado').animate({'padding-top': '-=50px'}, 'slow');
+        } else {
+            $('#idioma').slideDown('slow');
+            $('#centro').animate({'padding-top': '+=50px'}, 'slow');
+            $('#lado').animate({'padding-top': '+=50px'}, 'slow');
+        }
+    },
+
+    '#idiomas_area click' : function() {
+        this.toggleMenuIdioma();
     },
 
     /**
@@ -278,10 +309,10 @@ $.Controller('Video.Pagina',
         }
     },
 
-    '#idioma input click': function() {
-        $('#idioma').slideUp();
-        $('#centro').animate({'padding-top': '-=50px'});
-        $('#lado').animate({'padding-top': '-=50px'});
+    '#idioma input click': function(el, ev) {
+        this.toggleMenuIdioma();
+        location.hash = '#!' + $(el).attr('name');
+        location.reload();
     }
 
 
