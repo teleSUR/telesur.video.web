@@ -41,9 +41,6 @@ $.Controller('Video.Clip',
             if (reproductor.clip && reproductor.clip.slug == this.options.clip.slug) {
                 this.element.addClass('seleccionado');
             }
-            if (!reproductor.clip_cargado){
-                reproductor.cambiarClip(this.options.clip, true);
-            }
         }
         else if ($.route.attr('vista') == 'detalle')
         {
@@ -63,7 +60,7 @@ $.Controller('Video.Clip',
         ev.preventDefault();
 
         // cargar thumbnail de mejor calidad
-        $(el).attr('src', this.options.clip.thumbnail_mediano);
+        $(el).attr('src', this.options.clip.thumbnail_grande);
 
         this.clipSeleccionado();
 //        var vid_attr = $.route.attr('vid');
@@ -78,12 +75,23 @@ $.Controller('Video.Clip',
 //        $.route.attrs(attrs);
     },
 
+    'img dblclick' : function(el, ev) {
+        ev.preventDefault();
+
+ //       var player = ($('.video_detalle').length > 0) ? jwplayer('standalone_player') : jwplayer('mediaplayer');
+
+
+        location.href = $('a.detalle').attr('href');
+    },
+
     clipSeleccionado : function() {
         var that = this;
         $('.video_clip').removeClass('seleccionado');
         this.element.addClass('seleccionado');
 
-        $('#reproductor').controller().cambiarClip(this.options.clip);
+//        var player_controller = ($('.video_detalle').length > 0) ? $('.video_detalle').controller() : $('#reproductor').controller();
+        var player_controller = $('#reproductor').controller();
+        player_controller.cambiarClip(this.options.clip);
 	}
 
 })
