@@ -6,8 +6,8 @@
 
 <fieldset class="fieldset" title="Datos del clip">
     <legend>Datos del clip</legend>
-    <label for="titulo">Título</label>
-    <input type="text" id="titulo" value="" />
+    <label for="titulo">Título <small>(máximo 60 caracteres)</small></label>
+    <input type="text" maxlength="60" id="titulo" value="" />
 
     <label for="tipo">Tipo de contenido</label>
     <select id="tipo" name="tipo">
@@ -23,16 +23,23 @@
     <select id="programa" name="programa">
         <option value="">---------</option>
         <option value="6">Agenda abierta</option>
-        <option value="3">Deportes teleSUR</option>
+        <option value="20">Caminos del Sur</option>
+        <option value="3">Deporte teleSUR</option>
         <option value="1">Dossier</option>
         <option value="5">En vivo desde el Sur</option>
         <option value="4">Impacto económico</option>
+        <option value="17">Jorge Gestoso</option>
         <option value="12">Mesa Redonda Internacional</option>
+        <option value="22">Mp3 Gira Latina</option>
         <option value="16">Nuestra América Deportiva</option>
         <option value="10">Programa especial</option>
         <option value="8">Realidades</option>
-        <option value="2">TeleSUR Noticias</option>
+        <option value="21">Reportajes teleSUR</option>
+        <option value="18">Sala A</option>
+        <option value="2">teleSUR Noticias</option>
+        <option value="15">teleSUR Noticias Portugués</option>
         <option value="13">Vidas</option>
+        <option value="19">Zona Verde</option>
     </select>
 
     <label for="categoria">Categoría informativa</label>
@@ -49,7 +56,7 @@
 
 
     <label for="descripcion">Descripción</label>
-    <textarea cols="20" rows="3" id="descripcion"></textarea>
+    <textarea cols="18" rows="3" id="descripcion"></textarea>
 
     <label for="ciudad">Ciudad</label>
     <input type="text" id="ciudad" value="" />

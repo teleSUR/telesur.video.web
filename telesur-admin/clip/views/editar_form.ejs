@@ -1,6 +1,6 @@
 <fieldset class="fieldset" title="Datos del clip">
-    <label for="titulo">Título</label>
-    <input type="text" id="titulo" value="<%= this.clip.titulo %>" />
+    <label for="titulo">Título <small>(máximo 60 caracteres)</small></label>
+    <input maxlength="60" type="text" id="titulo" value="<%= this.clip.titulo %>" />
 
     <label for="descripcion">Descripción</label>
     <textarea cols="20" rows="3" id="descripcion"><%= this.clip.descripcion %></textarea>
