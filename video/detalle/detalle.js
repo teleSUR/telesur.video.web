@@ -38,12 +38,22 @@ $.Controller('Video.Detalle',
 
     show: function() {
         // cargar HTML
-        this.element.html("//video/detalle/views/init.ejs", {clip: this.options.clip});
+        this.element.html("//video/detalle/views/init.ejs", {clip: this.options.clip, idioma: $(document).controller().idioma});
 
         //this.initPlayer();
         if (!($('#reproductor').controller().clip_cargado)) {
             $('#reproductor').controller().cambiarClip(this.options.clip);
         }
+
+        var url = this.options.clip.navegador_url;
+        $.getScript('http://s7.addthis.com/js/250/addthis_widget.js?pubid=ra-4f2d726c065de481&domready=1', {cache: true}, function() {
+            addthis.init();
+            addthis.toolbox("#sociales1", {
+                ui_language: $(document).controller().idioma,
+                url: url
+            });
+
+        });
 
         Video.Models.Clip.findAll({detalle: 'completo', ultimo: 3, relacionados: this.options.clip.slug}, this.callback('relacionadosRecibidos'));
     },
@@ -79,17 +89,6 @@ $.Controller('Video.Detalle',
             ]
         });
 
-        var url = this.options.clip.navegador_url;
-        $.getScript('http://s7.addthis.com/js/250/addthis_widget.js?pubid=ra-4f2d726c065de481&domready=1', {cache: true}, function() {
-            //addthis.toolbox("#sociales1");
-            //addthis.init();
-
-            addthis.toolbox("#sociales1", {
-                ui_language: 'es',
-                url: url
-            });
-
-        });
     },
 
     '.regresar click' : function(ev, el) {
@@ -98,21 +97,7 @@ $.Controller('Video.Detalle',
         var v1 = $(document).controller().tipo_slug || 'noticia';
         var v2 = $(document).controller().modo || undefined;
 
-        var mini_player = jwplayer('mediaplayer');
-        if (mini_player) {
-            $('#player_wrapper').css({
-                height: 230, width: 350, left: 0, top: 0
-            });
-//            var standalone = jwplayer('standalone_player');
-//            if (standalone) {
-//                mini_player.seek(standalone.getPosition());
-//                $('#mediaplayer').show();
-//                if (standalone.getPosition() > 0) {
-//                    mini_player.play();
-//                }
-        } else {
-           // $('#mediaplayer').show();
-        }
+        $('#reproductor').controller().minimizar();
 
         location.href = $.route.url({idioma: $(document).controller().idioma, vista: 'lista', v1: v1, v2: v2});
 

@@ -28,31 +28,38 @@ $.Controller('Video.Player',
 		steal.dev.log('inicializando controlador Player');
 
         // cargar HTML
-        this.element.html("//video/player/views/init.ejs", {});
+        this.element.html("//video/player/views/init.ejs", {idioma: $(document).controller().idioma});
 
-        // inicializar player
-		jwplayer('mediaplayer').setup({
+        var player_options = {
             'skin': this.options.player_skin_src,
             'width': '100%',// this.options.player_width,
             'height': '100%', //this.options.player_height,
             'controlbar': 'bottom',
             'wmode': 'window',
+            'plugins': {
+                'gapro-2': { }
+            },
             'modes': [
-                {
-                    type: 'flash',
-                    src: this.options.player_swf_src,
-                    config: { 'provider': 'http', 'http.startparam':'start' }
-                },
-                {
-                    type: 'html5',
-                    config: { }
-                },
-                {
-                    type: 'download',
-                    config: { }
-                }
+            {
+                type: 'flash',
+                src: this.options.player_swf_src
+                //config: { 'provider': 'http', 'http.startparam':'start' }
+            },
+            {
+                type: 'html5',
+                config: { }
+            },
+            {
+                type: 'download',
+                config: { }
+            }
             ]
-		});
+        };
+        if ($(document).controller().idioma) {
+            player_options.plugins['captions-2'];
+        }
+        // inicializar player
+		jwplayer('mediaplayer').setup(options);
 	},
 
     /**
@@ -82,23 +89,23 @@ $.Controller('Video.Player',
         // link
         this.element.find('.opciones a.detalle').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
 
-        $.getScript('http://s7.addthis.com/js/250/addthis_widget.js?pubid=ra-4f2d726c065de481&domready=1', {cache: true}, function() {
-            //addthis.toolbox("#sociales1");
-            //addthis.init();
-            addthis.toolbox("#sociales0", {
-                url: clip.navegador_url,
-                ui_language: $(document).controller().idioma,
-                height: 25
+        if (typeof addthis == 'undefined') {
+            jQuery.ajax({
+                url: 'http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f2d726c065de481&domready=1',
+                cache: true,
+                dataType: 'script'
             });
-        });
-
+            //jQuery.getScript('', this.callback('setSociales'));
+        } else {
+            this.setSociales();
+        }
 
         // determinar parámetros para player
         var options = { image: this.clip.thumbnail_grande };
-        if (this.clip.metodo_preferido == 'XXXXXstreaming') {
-            options = $.extend(options, { file: clip.streaming.rtmp_file, streamer: clip.streaming.rtmp_server, 'rtmp.subscribe': true });
-        } else {
+        if (this.clip.metodo_preferido == 'XXhttp') {
             options = $.extend(options, { file: clip.archivo_subtitulado_url ? clip.archivo_subtitulado_url : clip.archivo_url });
+        } else {
+            options = $.extend(options, { file: clip.streaming.rtmp_file, streamer: clip.streaming.rtmp_server});
         }
 
         jwplayer('mediaplayer').load(options);
@@ -106,6 +113,44 @@ $.Controller('Video.Player',
         if (!sin_autoplay) {
             jwplayer().play();
         }
+    },
+
+    minimizar : function() {
+        var mini_player = jwplayer('mediaplayer');
+        if (mini_player) {
+            $('#player_wrapper').css({
+                height: 230, width: 350, left: 0, top: 0
+            });
+//            var standalone = jwplayer('standalone_player');
+//            if (standalone) {
+//                mini_player.seek(standalone.getPosition());
+//                $('#mediaplayer').show();
+//                if (standalone.getPosition() > 0) {
+//                    mini_player.play();
+//                }
+        } else {
+            // $('#mediaplayer').show();
+        }
+    },
+
+    maximizar : function() {
+        $('#player_wrapper').css({
+            'z-index': 999, opacity: 1,
+            width: 515, height: 320, left: -304, top: 6, 'z-index': 1000000
+        });
+        $('#standalone_player img').fadeOut(function() { $(this).remove(); });
+        //$('#standalone_player').css({width: 560, height: 320}).empty();
+    },
+
+    setSociales : function() {
+        addthis_share.url = this.clip.navegador_url;
+        addthis.update('share', 'url', this.clip.navegador_url);
+        addthis.update('share', 'title', this.clip.titulo);
+//        addthis.toolbox("#sociales0", {
+//            url: this.clip.navegador_url,
+//            ui_language: $(document).controller().idioma,
+//            height: 25
+//        });
     }
 
 })

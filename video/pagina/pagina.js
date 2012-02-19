@@ -208,15 +208,9 @@ $.Controller('Video.Pagina',
         var that = this;
         Video.Models.Clip.findOne({idioma: this.idioma, detalle: 'completo', id: slug}, function(clips) {
 
-            $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#pagina')).fadeIn(function() {
-                    $('#player_wrapper').css({
-                        'z-index': 999, opacity: 1,
-                        width: 515, height: 320, left: -304, top: 6, 'z-index': 1000000
-                    });
-                    $('#standalone_player img').fadeOut(function() { $(this).remove(); });
-                    //$('#standalone_player').css({width: 560, height: 320}).empty();
-           }).trigger('show');
-
+            var detalle = $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#pagina')).fadeIn(function() {
+                $('#reproductor').controller().maximizar();
+            }).trigger('show');
 
             //that.element.find('#navegador').html(clip[0].titulo + '<img src="'+ clip[0].thumbnail_grande +'" />');
         })
@@ -280,6 +274,8 @@ $.Controller('Video.Pagina',
      */
     tipoSeleccionado : function(ev, tipo_slug, tipo_slug_anterior) {
         if (!tipo_slug) return;
+
+        $('#reproductor').controller().minimizar();
 
         this.tipo_slug = tipo_slug;
         var tipo;
