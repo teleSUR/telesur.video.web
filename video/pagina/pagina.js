@@ -5,7 +5,7 @@ steal('jquery/dom/route', 'jquery/lang/observe/delegate', 'mxui/layout/modal')
 
 .then('video/navegador', 'video/player', 'video/buscador')
 
-.then('jquery/controller','jquery/view/ejs')
+.then('jquery/controller','jquery/view/ejs', 'steal/html')
     .then('./views/init.ejs', function($) {
 /**
  * @class Video.Pagina
@@ -30,6 +30,7 @@ $.Controller('Video.Pagina',
 /** @Prototype */
 {
 	init : function() {
+        steal.html.wait();
         steal.dev.log('inicializando Video.Pagina');
 
         this.idioma = 'es';

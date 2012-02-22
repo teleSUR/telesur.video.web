@@ -3,5 +3,6 @@
 load('steal/rhino/rhino.js')
 
 steal('steal/html/crawl', function(){
-  steal.html.crawl("telesur-web/telesur-web.html","telesur-web/out")
+  // steal.html.crawl("telesur-web/telesur-web.html","telesur-web/out")
+  steal.html.crawl("telesur-web/telesur-web.html", { out: 'telesur-web/out', browser: 'phantomjs' })
 });

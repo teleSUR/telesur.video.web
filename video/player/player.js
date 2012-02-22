@@ -59,7 +59,7 @@ $.Controller('Video.Player',
             player_options.plugins['captions-2'];
         }
         // inicializar player
-		jwplayer('mediaplayer').setup(options);
+		jwplayer('mediaplayer').setup(player_options);
 	},
 
     /**
@@ -113,6 +113,11 @@ $.Controller('Video.Player',
         if (!sin_autoplay) {
             jwplayer().play();
         }
+
+        setTimeout(function() {
+            steal.html.ready();
+        })
+
     },
 
     minimizar : function() {
