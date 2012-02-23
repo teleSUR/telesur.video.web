@@ -69,7 +69,7 @@ $.Controller('Video.Pagina',
 
     idiomaSeleccionado : function(el, val, oldVal) {
         this.idioma = val;
-        //alert('no iid');
+        $('#idioma input[name="'+val+'"]').attr('checked', 'checked').siblings('input:radio').removeAttr('checked');
     },
 
 //    navegacionCambiada :  function( ev, attr, how, nevVal, oldVal ) {
