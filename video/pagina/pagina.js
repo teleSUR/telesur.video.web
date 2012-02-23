@@ -70,6 +70,7 @@ $.Controller('Video.Pagina',
     idiomaSeleccionado : function(el, val, oldVal) {
         this.idioma = val;
         $('#idioma input[name="'+val+'"]').attr('checked', 'checked').siblings('input:radio').removeAttr('checked');
+        $('#idioma label[for="idioma_'+val+'"]').addClass('seleccionado').siblings('label').removeClass('seleccionado');
     },
 
 //    navegacionCambiada :  function( ev, attr, how, nevVal, oldVal ) {
