@@ -48,12 +48,17 @@ $.Controller('Video.Pagina',
         $.route.delegate('vista', 'set', this.callback('vistaSeleccionada'));
         $.route.delegate('v1', 'set', this.callback('v1Callback'));
 
-        $.route.ready(true);$.route.ready(false);
+        $.route.ready(true);
 
         if (!$.route.attr('idioma')) {
-           //location.hash = $.route.url({'idioma': 'es'});
-           $.route.attrs({'idioma': 'es'});
+           var idioma = $.cookie('idioma') || 'es';
+           $.route.attrs({'idioma': idioma});
+           location.hash = $.route.url({'idioma': idioma});
         }
+
+        $.route.ready(false);
+
+
 
         if (!$.route.attr('vista')) {
             //alert('mi '+$.route.attrs().toSource());
@@ -124,8 +129,11 @@ $.Controller('Video.Pagina',
                 //$.route.attr('vista', this.constructor.vistas.lista.nombre);
 
 
-
                 this.element.find("#publicidad").show();
+
+                if (!$.cookie('idioma')) {
+                    this.toggleMenuIdioma();
+                }
 
                 if (!$('#reproductor').controller().clip_cargado) {
                     Video.Models.Clip.findAll({detalle: 'completo', 'idioma': this.idioma, ultimo:1, tipo:'noticia'}, function(clips) {
@@ -312,8 +320,14 @@ $.Controller('Video.Pagina',
 
     '#idioma input click': function(el, ev) {
         this.toggleMenuIdioma();
-        location.hash = '#!' + $(el).attr('name');
-        location.reload();
+        var idioma = $(el).attr('name');
+        $.cookie('idioma', idioma);
+
+        if (this.idioma != idioma) {
+            location.hash = '#!' + idioma;
+            location.reload();
+        }
+
     }
 
 
