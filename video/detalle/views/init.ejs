@@ -21,7 +21,7 @@
     </div>
 
     <div class="titulo"><h1><%= this.clip.titulo %></h1></div>
-    <div class="descripcion"><%= this.clip.descripcion %></div>
+    <div class="descripcion"><% if (clip.descripcion) { %><%= this.clip.descripcion %><% } else if (this.clip.programa) { %><%= this.clip.programa.descripcion %><% } %></div>
 </div>
 
 <div class="comentarios">
