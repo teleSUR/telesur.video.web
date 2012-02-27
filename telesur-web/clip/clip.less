@@ -13,7 +13,7 @@
 }
 
 .video_clip {
-    width: 175px;
+    width: 190px;
     height: 155px;
     padding: 10px 5px 0 5px;
     float: left;
@@ -29,7 +29,7 @@
     }
 
     &.seleccionado {
-        background-color: #202020;
+        background-color: #1E1E1E;
         .opacity(100);
 
         img {
@@ -40,40 +40,53 @@
     &.programa {
         .titulo {
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
         .tiempo {
             text-align: center;
-            width: 175px;
+
+            .redondeado;
+            .opacity(85);
+            padding: 3px 5px;
+            background:  #222222;
+            bottom: 130px;
+            right: auto;
+            left: 20px;
+            border: 1px solid #999999;
         }
     }
 
-    img {
-        .opacity(88);
-        cursor: pointer;
+    .thumbnail {
+        text-align: center;
+        img {
+            .opacity(88);
+            cursor: pointer;
+        }
     }
 
     .titulo {
-
+        padding: 0 2px;
+        font-size: 0.9em;
+        margin-top: 10px;
     }
 
     .duracion {
             position: absolute;
-            top: 85px;
+            top: 95px;
             right: 15px;
             font-size: 0.90em;
-            background: black;
+            background: #222222;
             padding: 3px;
-            border: 1px solid #666;
+            border: 1px solid #999999;
             .redondeado(4px);
-            .opacity(65);
+            .opacity(88);
         }
 
     .tiempo {
             position: absolute;
-            bottom: 5px;
-            right: 10px;
-            font-size: 0.80em;
+            bottom: 1px;
+            right: 7px;
+            font-size: 0.77em;
         }
 }
 
