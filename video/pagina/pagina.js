@@ -1,4 +1,4 @@
-steal('jquery/dom/route', 'jquery/lang/observe/delegate', 'mxui/layout/modal')
+steal('jquery/dom/route', 'jquery/dom/cookie', 'jquery/lang/observe/delegate', 'mxui/layout/modal')
 .then('steal/less').then('./pagina.less')
 
 //.then({src: 'http://s7.addthis.com/js/250/addthis_widget.js#/pubid=ra-4f2d726c065de481&domready=1', packaged: false})
@@ -132,7 +132,8 @@ $.Controller('Video.Pagina',
                 this.element.find("#publicidad").show();
 
                 if (!$.cookie('idioma')) {
-                    this.toggleMenuIdioma();
+                    var that = this;
+                    setTimeout(function() { that.toggleMenuIdioma() }, 1250);
                 }
 
                 if (!$('#reproductor').controller().clip_cargado) {
