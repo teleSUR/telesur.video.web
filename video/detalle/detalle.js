@@ -55,6 +55,15 @@ $.Controller('Video.Detalle',
 
         });
 
+        if((navigator.userAgent.match(/iPhone/i)) ||
+            (navigator.userAgent.match(/iPod/i)) ||
+            (navigator.userAgent.match(/iPad/i))) {
+
+            this.initPlayer();
+        }
+
+
+
         Video.Models.Clip.findAll({detalle: 'completo', ultimo: 3, relacionados: this.options.clip.slug}, this.callback('relacionadosRecibidos'));
     },
 
@@ -62,7 +71,7 @@ $.Controller('Video.Detalle',
         steal.dev.log('inicializando controlador Detalle');
         // inicializar player
         jwplayer('standalone_player').setup({
-            'skin' : 'resources/mediaplayer/skins/glow/glow.zip',
+            //'skin' : 'resources/mediaplayer/skins/glow/glow.zip',
             'width': 560,
             'height': 320,
             'controlbar': 'bottom',
@@ -73,11 +82,11 @@ $.Controller('Video.Detalle',
             'start' : this.position,
             'autoplay' : this.position > 0,
             'modes': [
-                {
-                    type: 'flash',
-                    src: 'resources/mediaplayer/player.swf',
-                    config: { 'provider': 'http', 'http.startparam':'start' }
-                },
+//                {
+//                    type: 'flash',
+//                    src: 'resources/mediaplayer/player.swf',
+//                    config: { 'provider': 'http', 'http.startparam':'start' }
+//                },
                 {
                     type: 'html5',
                     config: { }
