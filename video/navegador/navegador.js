@@ -451,6 +451,15 @@ $.Controller('Video.Navegador',
                     });
                 };
                 break;
+            case 'cargados':
+                optionsFnc = function() {
+                    return $.extend(true, {}, base_options, {
+                        titulo : 'cargados',
+                        numFilasMostradasDefault: 10
+
+                    });
+                };
+                break;
         }
 
         // crear grupos
@@ -528,7 +537,10 @@ $.Controller('Video.Navegador',
                     this.agrupadoresRecibidos(modo, Object.keys(this.constructor.fecha_params));
                     break;
                 case 'todos':
-                    this.agrupadoresRecibidos('todos', ['todos']);
+                    this.agrupadoresRecibidos(modo, ['todos']);
+                    break;
+                case 'cargados':
+                    this.agrupadoresRecibidos(modo, ['cargados']);
                     break;
                 default:
                     steal.dev.warn('Modo no reconocido: ' + modo);

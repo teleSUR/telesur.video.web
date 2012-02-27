@@ -13,11 +13,13 @@ Video.Navegador('Video.Navegador',
     {
         init : function() {
             $.extend(this.modos, {
-                'todos' : { nombre: {es: 'todos', en: 'all', pt: 'todos' } }
+                'todos' : { nombre: {es: 'todos', en: 'all', pt: 'todos' } },
+                'cargados' : { nombre: {es: 'cargados', en: 'cargados', pt: 'cargados' } }
             });
 
             var self = this;
             $.each(this.tipos, function(tipo, modos) {
+                self.tipos[tipo].unshift('cargados');
                 self.tipos[tipo].unshift('todos');
             });
         }
