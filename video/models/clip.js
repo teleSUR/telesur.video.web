@@ -97,8 +97,8 @@ Video.Models.ApiModel('Video.Models.Clip',
          * Devuelve representación escrita de la fecha
          * si la fecha es del año actual, omitirlo
          */
-        getFechaTexto : function() {
-            var formatoFecha = "d de MMMM" + ((this.constructor.fecha_actual.getYear() != this.fecha.getYear()) ? ", yyyy" : "");
+        getFechaTexto : function(forzar_ano) {
+            var formatoFecha = 'd de MMMM' + ((forzar_ano || this.constructor.fecha_actual.getYear() != this.fecha.getYear()) ? ', yyyy' : '');
             return $.format.date(this.fecha, formatoFecha);
         },
 
