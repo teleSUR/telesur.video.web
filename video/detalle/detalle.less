@@ -1,44 +1,58 @@
 @color_fondo: #3b3b3b;
 
-.video_detalle {
-
-    margin: 66px 0 0 0;
-    position: fixed;
-    height: 585px;
-    z-index: 20000;
-    background: #0f0e0e;
-    width: 960px;
-    overflow: hidden;
-
-    .relacionados {
-        .header {
-             height: 37px;
-             background: url(../../telesur-web/resources/img/relacionados_header.jpg) no-repeat;
-         }
-
-        .video_clip { padding: 0 }
-        width: 180px;
-        height: 585px;
-        float: left;
-        clear: left;
-        background: url(../../telesur-web/resources/img/fondo_sep_der.png) repeat-y right;
-        padding-right: 20px;
-        margin-right: 10px;
+.relacionados {
+    h3 {
+        text-align: center;
+        font-size: 14px;
+        padding-bottom: 5px;
+        background: url(../../telesur-web/resources/img/lado_sep.jpg) bottom no-repeat;
     }
 
+    .video_clip {
+        padding: 3px;
+        width: 200px;
+        height: auto;
+        float: none;
+        /*clear: left;*/
+        /*background: url(../../telesur-web/resources/img/fondo_sep_der.png) repeat-y right;*/
+        margin-right: 10px;
+        margin: 0 auto;
+        margin-top: 15px;
+
+        .titulo {
+            text-align: center;
+        }
+
+    }
+
+
+}
+
+.video_detalle {
+    padding-top: 20px;
+    /*margin: 66px 0 0 0;*/
+    /*position: fixed;*/
+    /*height: 585px;*/
+    /*z-index: 20000;*/
+    /*background: #0f0e0e;*/
+    /*width: 960px;*/
+    /*overflow: hidden;*/
+
+
     .visor {
-        width: 750px;
-        float: left;
+        /*width: 750px;*/
+        /*float: left;*/
 
         .player {
-            width: 576px;
-            height: 338px;
+            width: 547px;
+            height: 351px;
             background: url(../../telesur-web/resources/img/detalle_marco_player.jpg) no-repeat;
-            float: left;
+            /*float: left;*/
+            margin: 0 auto;
 
             img {
                 display: block;
-                width: 560px;
+                width: 510px;
                 margin: 8px 0 0 8px;
             }
 
@@ -54,15 +68,16 @@
             cursor: pointer;
 
             &.izq {
-                background: url(../../telesur-web/resources/img/detalle_nav_izq.jpg) no-repeat;
+                /*background: url(../../telesur-web/resources/img/detalle_nav_izq.jpg) no-repeat;*/
             }
             &.der {
-                background: url(../../telesur-web/resources/img/detalle_nav_der.jpg) no-repeat;
+                /*background: url(../../telesur-web/resources/img/detalle_nav_der.jpg) no-repeat;*/
             }
 
         }
 
         .regresar {
+            display: none;
              float: left;
              width: 35px;
              height: 338px;
@@ -72,33 +87,66 @@
 
 
     }
-    
+
+    .sociales {
+        background: url(../../telesur-web/resources/img/detalle_opciones.jpg) no-repeat left;
+        height: 40px;
+        width:547px;
+        margin: 10px auto;
+        padding-top: 15px;
+
+        .descarga_audio, .descarga_video {
+            float: left;
+            padding-left: 35px;
+            margin-left: 7px;
+
+            span {
+                display: block;
+                clear: left;
+            }
+        }
+
+        .descarga_video {
+            background: url(../../telesur-web/resources/img/icono_descarga.png) no-repeat left;
+        }
+        .descarga_audio {
+            padding-left: 40px;
+            background: url(../../telesur-web/resources/img/icono_audio.png) no-repeat left;
+        }
+    }
+
     .datos {
-        width: 450px;
-        float: left;
-        background: url(../../telesur-web/resources/img/sombra_arriba.jpg) repeat-x top;
+        padding: 0 46px;
 
-        .sociales {
-            background: url(../../telesur-web/resources/img/fondo_barra_horizontal.jpg) repeat-x;
-            height: 45px;
+        div {
+            margin: 7px 0;
+            line-height: 1.35em;
 
-             .fondo_sociales {
-                background: url(../../telesur-web/resources/img/sociales.png) no-repeat right 5px;
-                height: 25px; margin-right: 1em;
+            span {
+                font-weight: bold;
             }
         }
 
         .titulo {
-            clear: left;
-            h1 { font-size: 16px; margin: 0; padding: 0; margin-bottom: 5px; }
+            h1 { font-size: 17px; line-height: 1.35em; margin: 0; padding: 0; margin-bottom: 5px; }
+        }
+
+        .descripcion {
+            margin-bottom: 15px;
+        }
+
+        .espaciotiempo {
+            .ciudad, .pais {
+                color: #666666;
+            }
+            .fecha {
+                text-decoration: underline;
+            }
         }
     }
 
     .comentarios {
-        width: 290px;
-        height: 230px;
-        float: left;
-        margin-left: 10px;
+        padding: 0 50px;
 
         /*background: url(../../telesur-web/resources/img/disqus.jpg) no-repeat;*/
 

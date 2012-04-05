@@ -85,7 +85,7 @@ $.Controller('Video.Navegador',
             dias_diff : { hasta: 0  }
         },
         ayer: {
-            nombre : {es: 'Ayer', en: 'Yesterday', pt: 'Ayer'},
+            nombre : {es: 'Ayer', en: 'Yesterday', pt: 'Ontem'},
             params : { tiempo: 'dia' },
             dias_diff : { hasta: 1 }
         },
@@ -105,7 +105,7 @@ $.Controller('Video.Navegador',
             dias_diff : { hasta: 39 }
         },
         siempre: {
-            nombre : {es: 'Siempre', en: 'Always', pt: 'sempre'},
+            nombre : {es: 'Siempre', en: 'Always', pt: 'Sempre'},
             params : { },
             dias_diff : { hasta: 0 }
         }
@@ -133,7 +133,7 @@ $.Controller('Video.Navegador',
         //          primeroMostrado: 1,
         //          ultimoMostrado: this.constructor.ultimoMostradoDefault
         //      };
-     
+
 
         if (this.options.tipo_clip != 'busqueda') {
             // detectar cuando el scroll llega al final
@@ -455,7 +455,8 @@ $.Controller('Video.Navegador',
                 optionsFnc = function() {
                     return $.extend(true, {}, base_options, {
                         titulo : 'cargados',
-                        numFilasMostradasDefault: 10
+                        numFilasMostradasDefault: 10,
+                        params: { usuario_creacion: 'Caracas' }
 
                     });
                 };

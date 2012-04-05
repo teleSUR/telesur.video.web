@@ -21,7 +21,12 @@ Video.Pagina('Video.Pagina',
         this._super();
 
         $("#pagina").append('<div class="nuevo_boton" />');
-        $("#cabeza, #abajo").empty();
+        $("#cabeza").empty();
+        $("#abajo").remove();
+    },
+
+    toggleMenuIdioma : function() {
+        // nada
     },
 
 //    init : function() {

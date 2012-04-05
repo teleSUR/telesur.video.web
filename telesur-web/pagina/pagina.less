@@ -5,13 +5,16 @@
 body {
     color: @color_texto;
     width: 960px;
-    background: @color_fondo url(../resources/img/fondo_pag.png) fixed repeat-y center;
+    background: @color_fondo url(../resources/img/fondo_body.jpg) fixed repeat-y center;
 }
 
 #pagina {
     width: 960px;
     overflow: hidden;
     clear: both;
+
+    /*background: url(../resources/img/gral_bg.png) repeat-y;*/
+
 
     area {
         cursor: pointer;
@@ -35,9 +38,48 @@ a:hover {
 
 
 #cabeza {
-    background: url(../resources/img/header_completo.png) no-repeat;
+    /*background: url(../resources/img/header_completo.png) no-repeat;*/
+    background: url(../resources/img/header_bg.jpg) no-repeat;
     height: 34px;
     width: 960px;
+
+    .tabs {
+        float: right;
+
+        a.tab {
+            font-size: 12px;
+            display: block;
+            float: left;
+            width: 70px;
+            padding: 0;
+            padding-right: 10px;
+            height: 34px;
+            text-align: right;
+            background: url(../resources/img/header_tab.png) no-repeat;
+            margin-left: -11px;
+
+            &:hover, &.seleccionado {
+                text-decoration: none;
+                background: url(../resources/img/header_tab_hover.png) no-repeat;
+            }
+
+            span {
+                clear: both;
+                display: block;
+                font-size: 80%;
+            }
+
+            &.idioma, &.inicio {
+                line-height: 30px;
+            }
+
+            &.idioma {
+                text-align: center;
+            }
+
+
+        }
+    }
 }
 
 #arriba {
@@ -47,12 +89,47 @@ a:hover {
 
 #buscador {
     float: right;
-    line-height: 20px;
+    padding-right: 13px;
+    padding-top: 4px;
 
-    input {
+    input[type="text"] {
+        background: url(../resources/img/search-white.png) no-repeat 10px 6px #444;
+        border: 0 none;
+        font: bold 12px Arial,Helvetica,Sans-serif;
+        color: #d7d7d7;
+        width:150px;
+        padding: 5px 15px 5px 35px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+        text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+        -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+        -webkit-transition: all 0.7s ease 0s;
+        -moz-transition: all 0.7s ease 0s;
+        -o-transition: all 0.7s ease 0s;
+        transition: all 0.7s ease 0s;
+    }
 
+    input[type="text"]:focus {
+        background: url(../resources/img/search-dark.png) no-repeat 10px 6px #fcfcfc;
+        color: #6a6f75;
+        width: 243px;
+        -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+        -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+        text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
     }
 }
+
+
+
+
+
+
+
+
 
 
 #idioma {
@@ -81,33 +158,47 @@ a:hover {
 #centro {
     padding-top: 66px;
     padding-bottom: 50px;
-    width: 623px;
+    width: 638px;
     float: left;
-    background: url(../resources/img/fondo_sep_der.png) right repeat-y;
-    padding-right: 15px;
+    /*background: url(../resources/img/col_gde_bg.png) repeat-y;*/
 }
 
 #lado {
-    width: 310px;
+    width: 306px;
 
     position: fixed;
     padding-top: 66px;
-    margin-left: 650px;
+    margin-left: 637px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    /*background: url(../resources/img/col_chica_bg.png) repeat-y;*/
 
     #reproductor {
-        height: 320px;
+        height: 300px;
         /*.descripcion { display: none; }*/
         .descripcion a { text-decoration: underline; }
     }
 
     #publicidad {
-        margin-left: 25px;
+        margin-top: 10px;
+        /*margin-left: 25px;*/
         width: 300px;
-        height: 250px;
-        position: absolute;
+        height: 262px;
+        border: 1px solid #636161;
+        clear: both;
+        /*position: absolute;*/
         /*z-index: 10000;*/
-        background-image: url(../resources/img/publicidad300x250.gif);
-        display: none !important;
+        /*background-image: url(../resources/img/publicidad300x250.gif);*/
+        /*display: none !important;*/
+        .pleca_publicidad {
+           height: 12px;
+           font-size: 10px;
+           line-height: 12px;
+           background: #636161;
+           color: #acabab;
+           text-align: center;
+        }
     }
 }
 

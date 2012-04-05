@@ -12,9 +12,7 @@ $.Controller('Video.Buscador',
 /** @Prototype */
 {
 	init : function(){
-		this.element.html("//video/buscador/views/init.ejs",{
-			message: "Hello World"
-		});
+		this.element.html("//video/buscador/views/init.ejs", {});
 	}
 })
 

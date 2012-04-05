@@ -68,7 +68,10 @@ $.Controller('Video.Player',
             ]
         };
         if ($(document).controller().idioma != 'es') {
-            player_options.plugins['captions-2'];
+            if (clip.archivo_subtitulado_url) {
+                player_options.modes[0].config = { 'provider': 'http', 'http.startparam':'start', 'file' : clip.archivo_subtitulado_url  }
+            }
+            //player_options.plugins['captions-2'];
         }
 
         if((navigator.userAgent.match(/iPhone/i)) ||
@@ -101,20 +104,26 @@ $.Controller('Video.Player',
         this.element.find('.titulo').html(clip.titulo);
 
         var descripcion = (!clip.descripcion && clip.programa) ? clip.programa.descripcion : clip.descripcion;
-        var descripcion_html = '<span class="descripcion">'+descripcion + '</span>... <a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;más)</a>';
+
+        //var descripcion_html = '<span class="descripcion">'+descripcion + '</span>...<a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;más)</a>';
+
+        //if ($(document).controller().idioma == 'pt') {
+        //    descripcion_html = clip.descripcion.substr(0, 70).replace(/\s*\w+$/, '') + '... <a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;mais)</a>';
+        //}
 
         // si no se tiene detalle completo (pero se requiere), solicitarlo
         if (typeof clip.programa == 'undefined' && !clip.descripcion) {
             Video.Models.Clip.findOne({id: clip.slug, detalle: 'completo'}, this.callback('recibirDetalleCompleto'));
         }
 
-//        var descripcion_html = clip.descripcion.substr(0, 150).replace(/\s*\w+$/, '') + '... <a href="'+$.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug})+'">(ver&nbsp;más)</a>';
-        this.element.find('.descripcion').html(descripcion_html);
+        //this.element.find('.descripcion').html(descripcion_html);
         this.element.find('.fecha').html(clip.getFechaTexto(true));
         this.element.find('.opciones').show();
 
         // link
-        this.element.find('.opciones a.detalle').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
+        $('a.vistaswitch').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : clip.slug}));
+        // descarga
+        this.element.find('.opciones a.descarga').attr('href', clip.descarga_url);
 
 //        if (typeof addthis == 'undefined') {
 //            jQuery.ajax({
@@ -145,30 +154,91 @@ $.Controller('Video.Player',
     },
 
     minimizar : function() {
-        var mini_player = jwplayer('mediaplayer');
-        if (mini_player) {
-            $('#player_wrapper').css({
-                height: 189, width: 300, left: 0, top: 0
+        $(document).controller().maximizado = false;
+
+        var player = jwplayer('mediaplayer'),
+            player_wrapper = $('#player_wrapper');
+
+        if (player) {
+
+            $('.relacionados').remove();
+
+            player_wrapper.css('opacity', 0);
+            // poner player en posición minimizada
+
+            player_wrapper.prependTo('#reproductor');
+            player_wrapper.parent().show();
+
+            player_wrapper.css({
+                height: 195, width: 300, 'padding-left': 0, 'padding-top': 0
             });
-//            var standalone = jwplayer('standalone_player');
-//            if (standalone) {
-//                mini_player.seek(standalone.getPosition());
-//                $('#mediaplayer').show();
-//                if (standalone.getPosition() > 0) {
-//                    mini_player.play();
-//                }
+
+
+            // mostrar player
+            player_wrapper.css('opacity', 1);
+           // player_wrapper.parent().children().not(player_wrapper).show();
+
+            player_wrapper.show();
+
+//            player.play();
+//            player.seek(10);
+
+
+            // eliminar controlador de detalle
+            $('.video_detalle').remove();
+
+            // mostrar nuevamente navegador
+            $('#navegador').show();
+
+
         } else {
             // $('#mediaplayer').show();
         }
+
+        $('a.vistaswitch').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : this.clip.slug}));
+
+        $('head title').html('teleSUR Video');
     },
 
-    maximizar : function() {
-        $('#player_wrapper').css({
-            'z-index': 999, opacity: 1,
-            width: 515, height: 320, left: -354, top: 6, 'z-index': 1000000
-        });
-        $('#standalone_player img').fadeOut(function() { $(this).remove(); });
-        //$('#standalone_player').css({width: 560, height: 320}).empty();
+    maximizar : function(sin_animacion) {
+
+        $(document).controller().maximizado = true;
+
+        var player_wrapper = $('#player_wrapper'),
+            posicionar_fnc = function() {
+                player_wrapper.css('opacity', 0);
+                // poner player en posición maximizada
+
+                // mostrar player
+                //player_wrapper.parent().children().not(player_wrapper).hide();
+
+                player_wrapper.css('opacity', 1);
+
+                player_wrapper.parent().hide();
+                player_wrapper.appendTo($('div.player'));
+
+                player_wrapper.css({
+                    width: 515, height: 323, 'padding-left': 15, 'padding-top': 15
+                });
+
+                player_wrapper.show();
+            };
+
+        if (sin_animacion) {
+            player_wrapper.hide();
+            posicionar_fnc();
+         } else {
+            player_wrapper.show(posicionar_fnc);
+        }
+
+        $('.relacionado').show('fast');
+
+        // eliminar thumbnail
+        //$('#standalone_player img').fadeOut(function() { $(this).remove(); });
+
+        // actualizar link de switch
+        $('a.vistaswitch').attr('href', '');
+
     },
 
     setSociales : function() {

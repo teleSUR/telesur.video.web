@@ -10,14 +10,23 @@
             <!--<input name="idioma" id="idioma_ru" type="radio"/> <label for="idioma_ru">русском</label>-->
         </div>
         <div id="cabeza">
+            <a href="#!"><img name="logo" src="resources/img/header_logo.png" alt="teleSUR"/></a>
 
-            <img name="header_completo" src="resources/img/header_completo.png" width="961" height="34" border="0" id="header_completo" usemap="#m_header_completo" alt="" />
-            <map name="m_header_completo" id="m_header_completo">
-            <area shape="rect" coords="883,0,961,34" href="javascript:;" alt="Idioma" id="idiomas_area" />
-            <area shape="rect" coords="807,0,883,34" href="http://www.telesurtv.net/el-canal/senal-en-vivo" alt="Video en vivo" id="video_area" />
-            <area shape="rect" coords="728,0,806,34" href="http://www.telesurtv.net/el-canal/senal-en-vivo  " alt="Audio en vivo" id="audio_area" />
-            <area shape="rect" coords="634,0,727,34" href="http://www.telesurtv.net/" id="inicio_area" alt="Inicio" />
-            </map>
+            <div class="tabs">
+
+                <a href="http://www.telesurtv.net/" class="tab inicio">INICIO</a>
+                <a href="http://www.telesurtv.net/el-canal/senal-en-vivo" class="tab audio">AUDIO <span>EN VIVO</span></a>
+                <a href="http://www.telesurtv.net/el-canal/senal-en-vivo" class="tab audio">VIDEO <span>EN VIVO</span></a>
+                <a href="javascript:;" id="idiomas_area" class="tab idioma"><%= ((this.idioma=='es') ? 'IDIOMA' : ((this.idioma=='en') ? 'LANGUAGE' : 'LINGUAGEM')) %></a>
+            </div>
+
+            <!--<img name="header_completo" src="resources/img/header_completo.png" width="961" height="34" border="0" id="header_completo" usemap="#m_header_completo" alt="" />-->
+            <!--<map name="m_header_completo" id="m_header_completo">-->
+            <!--<area shape="rect" coords="883,0,961,34" href="javascript:;" alt="Idioma" id="idiomas_area2" />-->
+            <!--<area shape="rect" coords="807,0,883,34" href="http://www.telesurtv.net/el-canal/senal-en-vivo" alt="Video en vivo" id="video_area" />-->
+            <!--<area shape="rect" coords="728,0,806,34" href="http://www.telesurtv.net/el-canal/senal-en-vivo " alt="Audio en vivo" id="audio_area" />-->
+            <!--<area shape="rect" coords="634,0,727,34" href="http://www.telesurtv.net/" id="inicio_area" alt="Inicio" />-->
+            <!--</map>-->
 
         </div>
         <div id="menu_tipos">
@@ -30,8 +39,12 @@
         <div id="navegador"></div>
     </div>
     <div id="lado">
+        <div class="switch"><a class="vistaswitch"><img src="resources/img/pantalla_completa.png" /></a></div>
         <div id="reproductor"></div>
-        <div id="publicidad" style="display:none;"></div>
+        <div id="lateral">
+            <div id="publicidad" style="display:none;"></div>
+        </div>
+
     </div>
     <div id="abajo">
 

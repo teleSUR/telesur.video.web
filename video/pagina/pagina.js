@@ -33,10 +33,9 @@ $.Controller('Video.Pagina',
         steal.html.wait();
         steal.dev.log('inicializando Video.Pagina');
 
-        this.idioma = 'es';
+        this.idioma = $.cookie('idioma') || 'es';
 
-        // cargar estructura inicial de la página
-        this.element.find('body').html("//video/pagina/views/init.ejs", {});
+        this.element.find('body').html("//video/pagina/views/init.ejs", {idioma: this.idioma});
 
         // rutas
         $.route(':idioma/:vista/:v1/:v2');
@@ -51,10 +50,12 @@ $.Controller('Video.Pagina',
         $.route.ready(true);
 
         if (!$.route.attr('idioma')) {
-           var idioma = $.cookie('idioma') || 'es';
-           $.route.attrs({'idioma': idioma});
-           location.hash = $.route.url({'idioma': idioma});
+           $.route.attrs({'idioma': this.idioma});
+           location.hash = $.route.url({'idioma': this.idioma});
         }
+
+        // cargar estructura inicial de la página
+
 
         $.route.ready(false);
 
@@ -88,8 +89,11 @@ $.Controller('Video.Pagina',
 //    },
 
     busquedaSolicitada : function(btn) {
-        var consulta = $('#buscador input').val();
-        location.hash = $.route.url({vista: 'lista', v1: 'busqueda', v2: consulta });
+        if (btn.which == 13) {
+            var consulta = $('#buscador input').val();
+            location.hash = $.route.url({vista: 'lista', v1: 'busqueda', v2: consulta });
+        }
+
 //        $.route.attrs({vista: 'lista', v1: 'busqueda', v2: consulta });
         //$.route.attrs({vista: 'lista', v1: 'busqueda', v2: consulta })
     },
@@ -129,7 +133,21 @@ $.Controller('Video.Pagina',
                 //$.route.attr('vista', this.constructor.vistas.lista.nombre);
 
 
-                this.element.find("#publicidad").show();
+                var publicidad_elem = this.element.find("#publicidad");
+                if (this.idioma == 'pt') {
+                    var opinion_iframe = '<iframe width="300" height="250" scrolling="no" style="border: none;" src="http://multimedia.telesurtv.net/pt/opinion/"></iframe>'
+                    publicidad_elem.empty();
+                    publicidad_elem.append(opinion_iframe);
+                    publicidad_elem.show();
+                } else {
+                    setTimeout(function() {
+                        publicidad_elem.empty();
+                        publicidad_elem.show();
+                        publicidad_elem.html('//video/pagina/views/publicidad.ejs', {});
+                    }, 2000);
+
+                }
+
 
                 if (!$.cookie('idioma')) {
                     var that = this;
@@ -166,7 +184,10 @@ $.Controller('Video.Pagina',
 
          // inicializar buscador
         this.element.find("#buscador").video_buscador();
-        this.bind($('#buscador button'), 'click', this.callback('busquedaSolicitada'));
+        //this.bind($('#buscador button'), 'click', this.callback('busquedaSolicitada'));
+
+        this.bind($('#buscador input'), 'keypress', this.callback('busquedaSolicitada'));
+
 
         // crear e intentar poblar store de cookie para tipos de clip
 //        this.tipos_clip = new Video.Models.TipoClip.CookieList([]).retrieve("tipos_clip");
@@ -216,11 +237,19 @@ $.Controller('Video.Pagina',
 
     videoSeleccionado : function(ev, slug, slug_anterior) {
         //alert('se seleccionó con slug' + $.route.attr('slug'));
+        this.maximizado = true;
         var that = this;
         Video.Models.Clip.findOne({idioma: this.idioma, detalle: 'completo', id: slug}, function(clips) {
 
-            var detalle = $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#pagina')).fadeIn(function() {
-                $('#reproductor').controller().maximizar();
+            $('#navegador').hide();
+            var titulo = 'teleSUR Video | ' + clips[0].titulo;
+            if (clips[0].tipo.slug == 'programa') {
+                titulo+= ': ' + clips[0].getFechaTexto(true);
+            }
+            $('head title').html(titulo);
+
+            var detalle = $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#centro')).show(function() {
+                $('#reproductor').controller().maximizar(!slug_anterior);
             }).trigger('show');
 
             //that.element.find('#navegador').html(clip[0].titulo + '<img src="'+ clip[0].thumbnail_grande +'" />');
@@ -258,11 +287,14 @@ $.Controller('Video.Pagina',
 
     toggleMenuIdioma : function() {
         if ($('#idioma').is(':visible')) {
-            $('#idioma').slideUp('slow');
+            $('#idioma').slideUp('slow', function() {
+                $('#idiomas_area').removeClass('seleccionado');
+            });
             $('#centro').animate({'padding-top': '-=50px'}, 'slow');
             $('#lado').animate({'padding-top': '-=50px'}, 'slow');
             $('.video_detalle').animate({'padding-top': '-=50px'}, 'slow');
         } else {
+            $('#idiomas_area').addClass('seleccionado');
             $('#idioma').slideDown('slow');
             $('#centro').animate({'padding-top': '+=50px'}, 'slow');
             $('#lado').animate({'padding-top': '+=50px'}, 'slow');
@@ -286,13 +318,16 @@ $.Controller('Video.Pagina',
     tipoSeleccionado : function(ev, tipo_slug, tipo_slug_anterior) {
         if (!tipo_slug) return;
 
-        $('#reproductor').controller().minimizar();
+        if (this.maximizado) {
+            $('#reproductor').controller().minimizar();
+        }
 
         this.tipo_slug = tipo_slug;
-        var tipo;
+        var tipo, titulo;
 
         if (tipo_slug == 'busqueda') {
             tipo = tipo_slug;
+            titulo = 'teleSUR Video | Búsqueda: ' + $('#buscador input').val();
 
         } else {
             // referencia al link del menú para el slug
@@ -306,7 +341,11 @@ $.Controller('Video.Pagina',
             // ajustar clases para marcar como seleccionado solo el link principal
             tipo_link.addClass('seleccionado').parent().siblings().find('a.seleccionado').removeClass('seleccionado');
             tipo = tipo_link.model();
+            titulo = 'teleSUR Video | ' + tipo.nombre_plural;
         }
+
+        // Actualizar título
+        $('head title').html(titulo);
 
         // crear o actualizar controlador para navegador
         var div_navegador = this.element.find('#navegador');
@@ -322,13 +361,28 @@ $.Controller('Video.Pagina',
     '#idioma input click': function(el, ev) {
         this.toggleMenuIdioma();
         var idioma = $(el).attr('name');
-        $.cookie('idioma', idioma);
+        $.cookie('idioma', idioma, {expires: 30});
 
         if (this.idioma != idioma) {
             location.hash = '#!' + idioma;
             location.reload();
         }
 
+    },
+
+    '.vistaswitch click' : function(el, evt) {
+        var el = $(el);
+        if (this.maximizado) {
+            evt.preventDefault();
+            // $.route.removeAttr('v1');$.route.removeAttr('vista');
+            // $.route.attrs({vista: 'lista'});
+            var v1 = this.tipo_slug || 'noticia';
+            var v2 = this.modo || undefined;
+
+            $('#reproductor').controller().minimizar();
+
+            location.href = $.route.url({idioma: $(document).controller().idioma, vista: 'lista', v1: v1, v2: v2});
+        }
     }
 
 
