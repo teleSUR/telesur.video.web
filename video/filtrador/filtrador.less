@@ -1,0 +1,128 @@
+@color_texto: black;
+@color_fondo: white;
+
+a.toggle_filtros {
+    display: block;
+    float: right !important;
+    margin-right: 5px !important;
+    background: url(../../telesur-web/resources/img/filtrador/dropdown.jpg) no-repeat right;
+    width: 60px;
+    text-align: left;
+}
+
+.video_filtrador {
+
+    background: #000000;
+    position: relative;
+    top: 35px;
+    width: 630px;
+    text-align: left;
+    padding-bottom: 5px;
+
+    .filtros {
+        font-size: 11px;
+
+        .header {
+            background: url(../../telesur-web/resources/img/filtrador/filtro_header_fondo.jpg);
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .filtro {
+            float: left;
+            width: 209px;
+            margin-left: 1px;
+            height: 126px;
+            background: url(../../telesur-web/resources/img/filtrador/fondo_filtro.jpg);
+
+            li {
+               list-style: none;
+               padding-left: 20px;
+            }
+        }
+
+        .filtrandos {
+
+            ul {
+                height: 81px;
+                overflow: auto;
+                padding: 0;
+                margin: 0;
+            }
+
+            li {
+                padding-left: 22px;
+                margin-left: 3px;
+                height: 20px;
+                overflow: hidden;
+                line-height: 20px;
+
+                background-position: left;
+                background-repeat: no-repeat;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #000000;
+
+                }
+
+                &.pais {
+                    background-image: url(../../telesur-web/resources/img/filtrador/pais_icono.jpg);
+                }
+                &.corresponsal {
+                    background-image: url(../../telesur-web/resources/img/filtrador/corresponsal_icono.jpg);
+                }
+                &.categoria {
+                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                }
+                &.entrevistado {
+                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                }
+                &.personaje {
+                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                }
+                &.tema {
+                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                }
+
+            }
+        }
+
+        input[type="text"] {
+            background: url(../../telesur-web/resources/img/search-white.png) no-repeat 10px 6px #444;
+            border: 0 none;
+            font: bold 12px Arial,Helvetica,Sans-serif;
+            color: #d7d7d7;
+            width:90px;
+            padding: 3px 10px 3px 25px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+            -webkit-transition: all 0.7s ease 0s;
+            -moz-transition: all 0.7s ease 0s;
+            -o-transition: all 0.7s ease 0s;
+            transition: all 0.7s ease 0s;
+        }
+
+        input[type="text"]:focus {
+            background: url(../resources/img/search-dark.png) no-repeat 10px 6px #fcfcfc;
+            color: #6a6f75;
+            width: 150px;
+            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+    }
+
+    .acciones {
+        clear: both;
+    }
+}

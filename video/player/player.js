@@ -1,6 +1,6 @@
-steal('steal/less').then('./player.less');
-steal({src: '../resources/mediaplayer/jwplayer.js', packaged: false})
+steal({src: 'video/resources/mediaplayer/jwplayer.js', packaged: false})
 
+.then('steal/less').then('video/player/player.less')
 
 .then( 'jquery/controller','jquery/view/ejs', 'video/detalle')
 	.then( './views/init.ejs', function($){
@@ -49,7 +49,12 @@ $.Controller('Video.Player',
             'wmode': 'window',
             'image': clip.thumbnail_grande,
             'plugins': {
-                'gapro-2': { }
+                'gapro-2': { },
+                'sharing-3': {
+                    code : encodeURIComponent('<script src="'+clip.player_javascript_url+'"></script>'),
+                    link : clip.navegador_url,
+                    heading: 'Comparte este video'
+                }
             },
             'modes': [
                 {
@@ -147,9 +152,28 @@ $.Controller('Video.Player',
             jwplayer().play();
         }
 
+        var titulo = this.clip.titulo + '| teleSUR Video';
+        document.title = titulo;
+
+        this.cargarSociales();
+
         setTimeout(function() {
             steal.html.ready();
         })
+
+    },
+
+    cargarSociales : function() {
+        var div = $('#sociales0');
+        div.empty();
+        div.append('<iframe src="//www.facebook.com/plugins/like.php?locale=es_MX&amp;href="' + encodeURIComponent(this.clip.navegador_url) +'" &amp;send=false&amp;layout=button_count&amp;width=80&amp;show_faces=false&amp;action=recommend&amp;colorscheme=dark&amp;font&amp;height=20&amp;appId=106741209367820" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:21px;" allowTransparency="true"></iframe>');
+        div.append('<iframe allowtransparency="true" frameborder="0" scrolling="no" ' +
+            'src="//platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(this.clip.navegador_url) + '&text=' + encodeURIComponent(this.clip.titulo) + '&lang='+ (this.clip.idioma || 'es') + '"' +
+            'style="width:115px; height:20px;"></iframe>');
+
+        div.append('<g:plusone size="medium" annotation="none" href="' + this.clip.navegador_url  + '"></g:plusone>');
+
+        gapi.plusone.go();
 
     },
 
@@ -172,6 +196,8 @@ $.Controller('Video.Player',
             player_wrapper.css({
                 height: 195, width: 300, 'padding-left': 0, 'padding-top': 0
             });
+
+            this.cargarSociales();
 
 
             // mostrar player
@@ -197,7 +223,6 @@ $.Controller('Video.Player',
 
         $('a.vistaswitch').attr('href', $.route.url({idioma: $(document).controller().idioma, vista : 'video', v1 : this.clip.slug}));
 
-        $('head title').html('teleSUR Video');
     },
 
     maximizar : function(sin_animacion) {

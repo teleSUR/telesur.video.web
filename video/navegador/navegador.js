@@ -3,10 +3,7 @@ steal('../resources/jquery.dateFormat.js')
 // Estilos
 .then('steal/less').then('./navegador.less')
 
-
-.then('video/grupo')
-
-
+.then('video/grupo', 'video/filtrador')
 
 // Controlador
 .then('jquery/controller','jquery/view/ejs')
@@ -190,6 +187,8 @@ $.Controller('Video.Navegador',
             //alert($.route.url({vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}));
             var modos = this.constructor.modos;
             $.each(this.constructor.tipos[tipo_clip.slug], function(i, modo) {
+                if (tipo_clip.slug == 'independiente' && modo == 'cargados')
+                    return; //return; // independientes y cargados no tiene sentido
                 $('<a>').attr('href', $.route.url({idioma: $(document).controller().idioma, vista: Video.Pagina.vistas.lista.nombre, v1: tipo_clip.slug, v2: modo}))
                     .html(modos[modo].nombre[$(document).controller().idioma].toUpperCase())
                     .addClass(modo)
@@ -442,6 +441,15 @@ $.Controller('Video.Navegador',
                     });
                 };
                 break;
+            case 'filtros':
+                optionsFnc = function(filtros) {
+                    return $.extend(true, {}, {
+                        titulo : 'Búsqueda avanzada',
+                        numFilasMostradasDefault: 5,
+                        params : filtros
+                    });
+                };
+                break;
             case 'todos':
                 optionsFnc = function() {
                     return $.extend(true, {}, base_options, {
@@ -457,6 +465,16 @@ $.Controller('Video.Navegador',
                         titulo : 'cargados',
                         numFilasMostradasDefault: 10,
                         params: { usuario_creacion: 'Caracas' }
+
+                    });
+                };
+                break;
+            case 'independientes':
+                optionsFnc = function() {
+                    return $.extend(true, {}, base_options, {
+                        titulo : 'cargados independientes',
+                        numFilasMostradasDefault: 10,
+                        params: { usuario_creacion: 'Caracas', tipo:'independiente' }
 
                     });
                 };
@@ -543,14 +561,28 @@ $.Controller('Video.Navegador',
                 case 'cargados':
                     this.agrupadoresRecibidos(modo, ['cargados']);
                     break;
+                case 'independientes':
+                    this.agrupadoresRecibidos(modo, ['independientes']);
+                    break;
                 default:
                     steal.dev.warn('Modo no reconocido: ' + modo);
             }
+
+            this.element.find('.menu_modos').append('<a href="#" class="toggle_filtros">Filtros</a>');
         } else {
             // búsqueda
             this.agrupadoresRecibidos('busqueda', [$.route.attr('v2')]);
         }
 
+    },
+
+    'a.toggle_filtros click' : function(el, ev) {
+        ev.preventDefault();
+        $('div.video_filtrador').remove();
+        var filtrador = $('<div />').video_filtrador();
+        this.element.find('.menu_modos').append(filtrador);
+
+        filtrador.trigger('show');
     }
 
 })

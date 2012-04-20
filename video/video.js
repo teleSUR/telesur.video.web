@@ -11,7 +11,6 @@ traducir = function(str) {
         'corresponsal': {en: 'correspondant', 'pt': 'correspondente', fr: ''},
         'categoría': {en: 'category', 'pt': 'categoría', fr: ''},
         'programa de origen': {en: 'source show', 'pt': 'programa de origen', fr: ''},
-        'entrevistador': {en: 'interviewer', 'pt': 'entrevistador', fr: ''},
         'videos relacionados': {en: 'related videos', 'pt': 'vídeos relacionados', fr: ''},
         'búsqueda': {en: 'search', 'pt': 'búsqueda', fr: ''},
         'descarga nuestra aplicación móvil en': {en: 'download our mobile app at', 'pt': 'descarga nuestra aplicación móvil en', fr: ''},
@@ -19,7 +18,7 @@ traducir = function(str) {
         'sin resultados para esta búsqueda': {en: 'no search results', 'pt': 'sin resultados para la búsqueda', fr: ''},
         'entrevistador': {en: 'interviewer', 'pt': 'entrevistador', fr: ''},
         'entrevistado': {en: 'interviewed', 'pt': 'entrevistado', fr: ''}
-    }
+    };
     var idioma = $(document).controller().idioma;
     if (idioma != 'es') {
         return cadenas[str][$(document).controller().idioma];
@@ -33,7 +32,7 @@ steal(
     './video.css',
 
     // Modelos
-    './models/models.js',
+    'video/models/models.js',
 
     // Controladores
     'video/pagina',

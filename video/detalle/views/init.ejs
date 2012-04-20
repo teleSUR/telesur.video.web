@@ -1,4 +1,4 @@
-<div class="visor">
+/<div class="visor">
     <!--<div class="nav izq"></div>-->
     <!--<div class="player"><div id="standalone_player"><img src="<%= this.clip.thumbnail_grande %>" /></div></div>-->
     <div class="player"></div>
@@ -18,7 +18,7 @@
                 src="//platform.twitter.com/widgets/tweet_button.html?url=<%= encodeURIComponent(this.clip.navegador_url) %>&text=<%= encodeURIComponent(this.clip.titulo) %>&lang=<%= this.clip.idioma || 'es' %>"
                 style="width:115px; height:20px;"></iframe>
 
-        <g:plusone size="medium" annotation="bubble" href="<%= this.clip.navegador_url %>"></g:plusone>
+        <g:plusone size="medium" annotation="none" href="<%= this.clip.navegador_url %>"></g:plusone>
 
     </div>
 </div>
@@ -60,4 +60,4 @@
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     </script>
-</div>
+</div>`

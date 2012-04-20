@@ -68,7 +68,6 @@ $.Controller('Video.Pagina',
             //alert('aaa' + $.route.attrs().toSource());
         }
 
-
       //  alert($.route.attr('idioma'));
         //$.route.bind('change', this.callback('navegacionCambiada'));
 	},
@@ -207,30 +206,34 @@ $.Controller('Video.Pagina',
 //            });
 //        }
 
+        if (typeof this.tipos_clip == 'undefined' || !this.admin) {
+            this.tipos_clip = [];
+        }
+
         if ($(document).controller().idioma == 'es') {
-            this.tipos_clip = [
+            this.tipos_clip.push(
                 new Video.Models.TipoClip({ slug: 'noticia', nombre_plural: 'noticias'}),
                 new Video.Models.TipoClip({ slug: 'entrevista', nombre_plural: 'entrevistas'}),
                 new Video.Models.TipoClip({ slug: 'programa', nombre_plural: 'programas'}),
                 new Video.Models.TipoClip({ slug: 'reportaje', nombre_plural: 'reportajes'}),
                 new Video.Models.TipoClip({ slug: 'documental', nombre_plural: 'documentales'})
-            ];
+            );
         } else if ($(document).controller().idioma == 'en') {
-            this.tipos_clip = [
+            this.tipos_clip.push(
                 new Video.Models.TipoClip({ slug: 'noticia', nombre_plural: 'news'}),
                 new Video.Models.TipoClip({ slug: 'entrevista', nombre_plural: 'interviews'}),
 //                new Video.Models.TipoClip({ slug: 'programa', nombre_plural: 'shows'}),
                 new Video.Models.TipoClip({ slug: 'reportaje', nombre_plural: 'reports'})
 //                new Video.Models.TipoClip({ slug: 'documental', nombre_plural: 'documentaries'})
-            ];
+            );
         } else if ($(document).controller().idioma == 'pt') {
-            this.tipos_clip = [
+            this.tipos_clip.push(
                 new Video.Models.TipoClip({ slug: 'noticia', nombre_plural: 'notícias'}),
                 new Video.Models.TipoClip({ slug: 'entrevista', nombre_plural: 'entrevistas'}),
                 new Video.Models.TipoClip({ slug: 'programa', nombre_plural: 'programas'}),
                 new Video.Models.TipoClip({ slug: 'reportaje', nombre_plural: 'reportagens'}),
                 new Video.Models.TipoClip({ slug: 'documental', nombre_plural: 'documentários'})
-            ];
+            );
         }
         this.tiposRecibidos();
     },
@@ -242,11 +245,13 @@ $.Controller('Video.Pagina',
         Video.Models.Clip.findOne({idioma: this.idioma, detalle: 'completo', id: slug}, function(clips) {
 
             $('#navegador').hide();
-            var titulo = 'teleSUR Video | ' + clips[0].titulo;
+            var titulo = clips[0].titulo + ' | teleSUR Video';
             if (clips[0].tipo.slug == 'programa') {
                 titulo+= ': ' + clips[0].getFechaTexto(true);
             }
-            $('head title').html(titulo);
+
+            document.title = titulo;
+//            $('head title').html(titulo);
 
             var detalle = $('<div />').hide().video_detalle({clip: clips[0]}).appendTo(that.element.find('#centro')).show(function() {
                 $('#reproductor').controller().maximizar(!slug_anterior);
@@ -326,8 +331,8 @@ $.Controller('Video.Pagina',
         var tipo, titulo;
 
         if (tipo_slug == 'busqueda') {
-            tipo = tipo_slug;
-            titulo = 'teleSUR Video | Búsqueda: ' + $('#buscador input').val();
+            //tipo = tipo_slug;
+            //titulo = 'teleSUR Video | Búsqueda: ' + $('#buscador input').val();
 
         } else {
             // referencia al link del menú para el slug
@@ -345,7 +350,7 @@ $.Controller('Video.Pagina',
         }
 
         // Actualizar título
-        $('head title').html(titulo);
+        //$('head title').html(titulo);
 
         // crear o actualizar controlador para navegador
         var div_navegador = this.element.find('#navegador');

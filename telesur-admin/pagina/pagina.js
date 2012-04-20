@@ -23,6 +23,15 @@ Video.Pagina('Video.Pagina',
         $("#pagina").append('<div class="nuevo_boton" />');
         $("#cabeza").empty();
         $("#abajo").remove();
+
+        this.admin = true;
+    },
+
+    vistaSeleccionada : function(ev, vista, vista_anterior) {
+
+       this.tipos_clip = [new Video.Models.TipoClip({ slug: 'independiente', nombre_plural: 'independientes'})];
+       this._super(ev, vista, vista_anterior);
+
     },
 
     toggleMenuIdioma : function() {
@@ -68,6 +77,8 @@ Video.Pagina('Video.Pagina',
 //    },
 
     '.nuevo_boton click' : function(el, ev) {
+
+
         var element = this.element,
             modal = $('<div class="nuevo_form editar_form" />')
                 .append('//telesur-admin/clip/views/nuevo_form.ejs', {}).hide()
@@ -76,6 +87,14 @@ Video.Pagina('Video.Pagina',
                     destroyOnHide: true
                 })
                 .appendTo('#centro');
+
+        $('select#tipo').change(function() {
+            if ($(this).val() == 'independiente') {
+                $(this).nextAll().hide();
+            } else {
+                $(this).nextAll().show();
+            }
+        });
 
         var self = this;
         this.uploader = new qq.FileUploader({
@@ -102,6 +121,8 @@ Video.Pagina('Video.Pagina',
             }
             // additional data to send, name-value pairs
         });
+
+
 
 //        modal.controller().original_hide = modal.controller().hide;
 //        modal.controller().hide = function(){
@@ -153,6 +174,7 @@ Video.Pagina('Video.Pagina',
         return this.clipCreado();
         //alert("error al crear nuevo clip");
     },
+
 
     '.nuevo_form input#archivo change' : function(el, ev) {
 

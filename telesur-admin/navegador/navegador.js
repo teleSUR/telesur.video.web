@@ -15,10 +15,17 @@ Video.Navegador('Video.Navegador',
             $.extend(this.modos, {
                 'todos' : { nombre: {es: 'todos', en: 'all', pt: 'todos' } },
                 'cargados' : { nombre: {es: 'cargados', en: 'cargados', pt: 'cargados' } }
+                //'independientes' : { nombre: {es: 'independientes', en: 'independientes', pt: 'independientes' } }
             });
+
+            $.extend(this.tipos, {
+                'independiente': ['fechas']
+            });
+
 
             var self = this;
             $.each(this.tipos, function(tipo, modos) {
+                //self.tipos[tipo].unshift('independientes');
                 self.tipos[tipo].unshift('cargados');
                 self.tipos[tipo].unshift('todos');
             });

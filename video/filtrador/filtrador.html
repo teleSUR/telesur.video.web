@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Video.Filtrador</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            .error {border: solid 1px red;}
+            .error_text { color: red; font-size: 10px;}
+            td {padding: 3px;}
+        </style>
+	</head>
+	<body>
+	    <h1>Video.Filtrador Demo</h1>
+		<div id='filtrador'></div>
+		<script type='text/javascript' 
+                src='../../steal/steal.js'>
+        </script>
+		<script type='text/javascript'>
+			steal('video/filtrador',function(){
+				
+				$('#filtrador').video_filtrador();
+			})
+		</script>
+	</body>
+</html>
