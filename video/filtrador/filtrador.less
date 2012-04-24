@@ -12,12 +12,12 @@ a.toggle_filtros {
 
 .video_filtrador {
 
+    border: 1px solid gray;
     background: #000000;
     position: relative;
-    top: 35px;
+    float: right;
     width: 630px;
     text-align: left;
-    padding-bottom: 5px;
 
     .filtros {
         font-size: 11px;
@@ -34,12 +34,52 @@ a.toggle_filtros {
             float: left;
             width: 209px;
             margin-left: 1px;
-            height: 126px;
+            height: 146px;
             background: url(../../telesur-web/resources/img/filtrador/fondo_filtro.jpg);
 
             li {
                list-style: none;
                padding-left: 20px;
+            }
+
+
+            &.fecha {
+                label {
+                    display: block;
+                    clear: left;
+                    font-size: 13px;
+                    padding-top: 12px;
+                }
+                input {
+                    float: left;
+                    display: block;
+                    width: 90px;
+                    height: 11px;
+                    font-size: 9px;
+                    background: #a9a9a9;
+                    border: none;
+                }
+
+                .filtrandos {
+                    padding-left: 15px;
+                }
+
+                a.dp-choose-date {
+                    margin: 0 !important;
+                    float: left;
+                    width: 16px;
+                    height: 16px;
+                    padding: 0;
+                    margin: 5px 3px 0;
+                    display: block;
+                    text-indent: -2000px;
+                    overflow: hidden;
+                    background: url(../../video/resources/img/calendario.gif) no-repeat;
+                }
+                a.dp-choose-date.dp-disabled {
+                    background-position: 0 -20px;
+                    cursor: default;
+                }
             }
         }
 
@@ -53,6 +93,7 @@ a.toggle_filtros {
             }
 
             li {
+
                 padding-left: 22px;
                 margin-left: 3px;
                 height: 20px;
@@ -64,65 +105,97 @@ a.toggle_filtros {
 
                 &:hover {
                     cursor: pointer;
-                    background-color: #000000;
+                    background-color: #222222;
+                }
 
+                &.seleccionado {
+                    background-color: #000000;
                 }
 
                 &.pais {
-                    background-image: url(../../telesur-web/resources/img/filtrador/pais_icono.jpg);
+//                    background-image: url(../../telesur-web/resources/img/filtrador/pais_icono.jpg);
                 }
                 &.corresponsal {
-                    background-image: url(../../telesur-web/resources/img/filtrador/corresponsal_icono.jpg);
+                    background-image: url(../../telesur-web/resources/img/filtrador/corresponsal_icono.png);
+                    &.seleccionado { background-image: url(../../telesur-web/resources/img/filtrador/corresponsal_icono_seleccionado.png); }
                 }
                 &.categoria {
-                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                    background-image: url(../../telesur-web/resources/img/filtrador/bullet_icono.png);
+                    &.seleccionado { background-image: url(../../telesur-web/resources/img/filtrador/bullet_icono_seleccionado.png); }
                 }
                 &.entrevistado {
-                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                    background-image: url(../../telesur-web/resources/img/filtrador/entrevistado_icono.png);
                 }
                 &.personaje {
-                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                    background-image: url(../../telesur-web/resources/img/filtrador/personaje_icono.png);
                 }
                 &.tema {
-                    background-image: url(../../telesur-web/resources/img/filtrador/categoria_icono.jpg);
+                    background-image: url(../../telesur-web/resources/img/filtrador/bullet_icono.png);
+                    &.seleccionado { background-image: url(../../telesur-web/resources/img/filtrador/bullet_icono_seleccionado.png); }
+                }
+                &.programa {
                 }
 
             }
         }
 
-        input[type="text"] {
-            background: url(../../telesur-web/resources/img/search-white.png) no-repeat 10px 6px #444;
-            border: 0 none;
-            font: bold 12px Arial,Helvetica,Sans-serif;
-            color: #d7d7d7;
-            width:90px;
-            padding: 3px 10px 3px 25px;
-            -webkit-border-radius: 20px;
-            -moz-border-radius: 20px;
-            border-radius: 20px;
-            text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
-            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
-            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
-            -webkit-transition: all 0.7s ease 0s;
-            -moz-transition: all 0.7s ease 0s;
-            -o-transition: all 0.7s ease 0s;
-            transition: all 0.7s ease 0s;
+        .paginacion {
+            text-align: center;
+
+            a {
+                cursor: pointer;
+                float: none;
+            }
         }
 
-        input[type="text"]:focus {
-            background: url(../resources/img/search-dark.png) no-repeat 10px 6px #fcfcfc;
-            color: #6a6f75;
-            width: 150px;
-            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
-            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
-            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        .header {
+            input[type="text"] {
+                background: url(../../telesur-web/resources/img/search-white.png) no-repeat 10px 6px #444;
+                border: 0 none;
+                font: bold 12px Arial,Helvetica,Sans-serif;
+                color: #d7d7d7;
+                width:90px;
+                padding: 3px 10px 3px 25px;
+                -webkit-border-radius: 20px;
+                -moz-border-radius: 20px;
+                border-radius: 20px;
+                text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+                -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+                -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+                box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+                -webkit-transition: all 0.7s ease 0s;
+                -moz-transition: all 0.7s ease 0s;
+                -o-transition: all 0.7s ease 0s;
+                transition: all 0.7s ease 0s;
+            }
+
+            input[type="text"]:focus {
+                background: url(../resources/img/search-dark.png) no-repeat 10px 6px #fcfcfc;
+                color: #6a6f75;
+                width: 150px;
+                -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+                -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+                box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset;
+                text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+            }
         }
 
     }
 
     .acciones {
         clear: both;
+        text-align: right;
+        height: 18px;
+
+        button {
+            margin: 3px;
+            height: 18px;
+            line-height: 18px;
+            display: block;
+            float: right;
+            background: #990f07;
+            color: white;
+            border: none;
+        }
     }
 }

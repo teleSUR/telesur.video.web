@@ -1,3 +1,13 @@
-<div class="header"><input type="text" id="<%= this.filtro.nombre %>" value="<%= this.filtro.nombre %>" /></div>
+<div class="header">
+    <% if (this.filtro.clase == "categoria") { %>
+        Categoría
+    <% } else { %>
+        <input type="text" id="<%= this.filtro.nombre %>" value="<%= this.filtro.nombre %>" />
+    <% } %>
+</div>
 <div class="texto"></div>
 <div class="filtrandos"><ul></ul></div>
+
+<% if (this.filtro.clase != "categoria") { %>
+    <div class="paginacion"><a class="anterior">anterior</a>  <a class="siguiente">siguiente</a></div>
+<% } %>

@@ -166,14 +166,14 @@ $.Controller('Video.Player',
     cargarSociales : function() {
         var div = $('#sociales0');
         div.empty();
-        div.append('<iframe src="//www.facebook.com/plugins/like.php?locale=es_MX&amp;href="' + encodeURIComponent(this.clip.navegador_url) +'" &amp;send=false&amp;layout=button_count&amp;width=80&amp;show_faces=false&amp;action=recommend&amp;colorscheme=dark&amp;font&amp;height=20&amp;appId=106741209367820" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:21px;" allowTransparency="true"></iframe>');
+       // div.append('<iframe src="//www.facebook.com/plugins/like.php?locale=es_MX&amp;href="' + encodeURIComponent(this.clip.navegador_url) +'" &amp;send=false&amp;layout=button_count&amp;width=80&amp;show_faces=false&amp;action=recommend&amp;colorscheme=dark&amp;font&amp;height=20&amp;appId=106741209367820" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:21px;" allowTransparency="true"></iframe>');
         div.append('<iframe allowtransparency="true" frameborder="0" scrolling="no" ' +
             'src="//platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(this.clip.navegador_url) + '&text=' + encodeURIComponent(this.clip.titulo) + '&lang='+ (this.clip.idioma || 'es') + '"' +
             'style="width:115px; height:20px;"></iframe>');
 
-        div.append('<g:plusone size="medium" annotation="none" href="' + this.clip.navegador_url  + '"></g:plusone>');
+        //div.append('<g:plusone size="medium" annotation="none" href="' + this.clip.navegador_url  + '"></g:plusone>');
 
-        gapi.plusone.go();
+        //gapi.plusone.go();
 
     },
 

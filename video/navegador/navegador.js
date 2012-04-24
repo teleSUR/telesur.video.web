@@ -568,7 +568,13 @@ $.Controller('Video.Navegador',
                     steal.dev.warn('Modo no reconocido: ' + modo);
             }
 
-            this.element.find('.menu_modos').append('<a href="#" class="toggle_filtros">Filtros</a>');
+            if (this.element.find('.toggle_filtros').length == 0) {
+                this.element.find('.menu_modos').append('<a href="#" class="toggle_filtros">Filtros</a>');
+            }
+            if ($('.video_filtrador').length > 0) {
+                $('.video_filtrador').hide();
+                $('.grupos').css('opacity', 1);
+            }
         } else {
             // búsqueda
             this.agrupadoresRecibidos('busqueda', [$.route.attr('v2')]);
@@ -578,11 +584,19 @@ $.Controller('Video.Navegador',
 
     'a.toggle_filtros click' : function(el, ev) {
         ev.preventDefault();
-        $('div.video_filtrador').remove();
-        var filtrador = $('<div />').video_filtrador();
-        this.element.find('.menu_modos').append(filtrador);
 
-        filtrador.trigger('show');
+        if ($('.video_filtrador').is(':visible')) {
+            $('div.video_filtrador').remove();
+            $('.grupos').css('opacity', 1);
+        } else {
+            $('div.video_filtrador').remove();
+            $('.grupos').css('opacity', 0.4);
+            var filtrador = $('<div />').video_filtrador();
+            this.element.find('.menu_modos').append(filtrador);
+            filtrador.trigger('show');
+        }
+
+
     }
 
 })

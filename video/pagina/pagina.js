@@ -330,6 +330,8 @@ $.Controller('Video.Pagina',
         this.tipo_slug = tipo_slug;
         var tipo, titulo;
 
+        $('.grupos').css('opacity', 1);
+
         if (tipo_slug == 'busqueda') {
             //tipo = tipo_slug;
             //titulo = 'teleSUR Video | Búsqueda: ' + $('#buscador input').val();

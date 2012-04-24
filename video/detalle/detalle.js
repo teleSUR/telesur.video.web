@@ -60,7 +60,7 @@ $.Controller('Video.Detalle',
 //        });
 
         //
-        gapi.plusone.go();
+        //gapi.plusone.go();
 
         // iOS
         if((navigator.userAgent.match(/iPhone/i)) ||
