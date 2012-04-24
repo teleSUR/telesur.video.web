@@ -90,6 +90,8 @@ $.Controller('Video.Filtrador',
 	init : function(){
         steal.dev.log('{filtrados} Inicializando Video.Filtrador');
         this.element.html("//video/filtrador/views/init.ejs",{});
+
+        Date.format = 'yyyy-mm-dd';
 	},
 
     'show' : function(){
@@ -118,7 +120,12 @@ $.Controller('Video.Filtrador',
     recibirProgramas : function(models){ this.recibirObjetos('programa', models); },
     recibirFechas : function() {
 
-        $('.filtro.fecha input.date').datePicker();
+        $('.filtro.fecha input').datePicker(
+            {
+                startDate: '2009/12/01',
+                endDate: (new Date()).asString()
+            }
+        );
     },
 
     recibirObjetos : function(modelo, objetos){
@@ -241,6 +248,15 @@ $.Controller('Video.Filtrador',
             $(this).removeClass('seleccionado');
             params[$(this).attr('class')] = $(this).attr('id');
         });
+;
+        if (this.find('input#desde').length > 0) {
+            var desde = this.find('input#desde').val()
+            if (desde) params['desde'] = desde;
+        }
+        if (this.find('input#hasta').length > 0) {
+            var hasta = this.find('input#hasta').val()
+            if (hasta) params['hasta'] = hasta;
+        }
 
         $('#navegador .video_grupo').remove();
 
