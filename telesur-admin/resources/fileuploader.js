@@ -485,8 +485,8 @@ qq.FileUploader = function(o){
         listElement: null,
 
         template: '<div class="qq-uploader">' +
-            '<div class="qq-upload-drop-area"><span>Arrastra archivos aquí para subir</span></div>' +
-            '<div class="qq-upload-button">Sube un archivo</div>' +
+            '<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>' +
+            '<div class="qq-upload-button">Upload a file</div>' +
             '<ul class="qq-upload-list"></ul>' +
             '</div>',
 
@@ -495,8 +495,8 @@ qq.FileUploader = function(o){
             '<span class="qq-upload-file"></span>' +
             '<span class="qq-upload-spinner"></span>' +
             '<span class="qq-upload-size"></span>' +
-            '<a class="qq-upload-cancel" href="#">Cancelar</a>' +
-            '<span class="qq-upload-failed-text">Error</span>' +
+            '<a class="qq-upload-cancel" href="#">Cancel</a>' +
+            '<span class="qq-upload-failed-text">Failed</span>' +
             '</li>',
 
         classes: {
@@ -600,7 +600,7 @@ qq.extend(qq.FileUploader.prototype, {
 
         var text;
         if (loaded != total){
-            text = Math.round(loaded / total * 100) + '% de ' + this._formatSize(total);
+            text = Math.round(loaded / total * 100) + '% from ' + this._formatSize(total);
         } else {
             text = this._formatSize(total);
         }
@@ -739,7 +739,7 @@ qq.UploadDropZone.prototype = {
     },
     _isValidFileDrag: function(e){
         var dt = e.dataTransfer,
-            // do not check dt.types.contains in webkit, because it crashes safari 4
+        // do not check dt.types.contains in webkit, because it crashes safari 4
             isWebkit = navigator.userAgent.indexOf("AppleWebKit") > -1;
 
         // dt.effectAllowed is none in Safari 5
@@ -1129,7 +1129,7 @@ qq.UploadHandlerXhr.isSupported = function(){
     var input = document.createElement('input');
     input.type = 'file';
 
-    return false && (
+    return (
         'multiple' in input &&
             typeof File != "undefined" &&
             typeof (new XMLHttpRequest()).upload != "undefined" );

@@ -243,16 +243,23 @@ $.Controller('Video.Navegador',
             'economia': { es: 'economía', en: 'economy', pt: 'economia' },
             'medio-ambiente': { es: 'medio ambiente', en: 'environment', pt: 'meio ambiente' },
             'ciencia': { es: 'ciencia', en: 'science', pt: 'ciência' },
+            'salud': { es: 'salud', en: 'health', pt: 'salud' },
+            'ciencia-y-tecnologia': { es: 'ciencia y tecnología', en: 'science and technology', pt: 'ciência e tecnologia' },
             'cultura': { es: 'cultura', en: 'culture', pt: 'cultura' },
-            'deportes': { es: 'deportes', en: 'sports', pt: 'esporte' }
+            'deportes': { es: 'deportes', en: 'sports', pt: 'esporte' },
+            'entre-fronteras': { es: 'entre fronteras', en: 'entre fronteras', pt: 'entre fronteras' },
+            'nuestra-mirada': { es: 'nuestra mirada', en: 'nuestra mirada', pt: 'nuestra mirada' },
+            'zona-verde': { es: 'zona verde', en: 'zona verde', pt: 'zona verde' }
         }, idioma = $(document).controller().idioma;
         this.categorias = [
             new Video.Models.Categoria({ slug: 'politica', nombre: categorias_nombres['politica'][idioma]}),
             new Video.Models.Categoria({ slug: 'economia', nombre: categorias_nombres['economia'][idioma]}),
             new Video.Models.Categoria({ slug: 'medio-ambiente', nombre: categorias_nombres['medio-ambiente'][idioma]}),
-            new Video.Models.Categoria({ slug: 'ciencia', nombre: categorias_nombres['ciencia'][idioma]}),
             new Video.Models.Categoria({ slug: 'cultura', nombre: categorias_nombres['cultura'][idioma]}),
-            new Video.Models.Categoria({ slug: 'deportes', nombre: categorias_nombres['deportes'][idioma]})
+            new Video.Models.Categoria({ slug: 'deportes', nombre: categorias_nombres['deportes'][idioma]}),
+            new Video.Models.Categoria({ slug: 'ciencia', nombre: categorias_nombres['ciencia'][idioma]}),
+            new Video.Models.Categoria({ slug: 'salud', nombre: categorias_nombres['salud'][idioma]}),
+            new Video.Models.Categoria({ slug: 'ciencia-y-tecnologia', nombre: categorias_nombres['ciencia-y-tecnologia'][idioma]})
         ];
 
         this.agrupadoresRecibidos('secciones', this.categorias);

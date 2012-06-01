@@ -2,8 +2,8 @@ steal('video/pagina' ) // controlador base
 .then('telesur-admin/navegador') // redefinir navegador
 .then('./pagina.less') // CSS
 
-.then('telesur-admin/resources/fileuploader.js')
-.then('telesur-admin/resources/fileuploader.js')
+//then('telesur-admin/resources/fileuploader.js')
+.then({src: 'http://upload.tlsur.net/upload-test/js/fileuploader.js', packaged: false})
 
 .then(function() {
 
@@ -28,7 +28,7 @@ Video.Pagina('Video.Pagina',
     },
 
     vistaSeleccionada : function(ev, vista, vista_anterior) {
-
+       this.admin = true;
        this.tipos_clip = [new Video.Models.TipoClip({ slug: 'independiente', nombre_plural: 'independientes'})];
        this._super(ev, vista, vista_anterior);
 
@@ -40,7 +40,7 @@ Video.Pagina('Video.Pagina',
 
 //    init : function() {
 //        steal.dev.log('inicializando Video.Pagina');
-//
+//x
 //        this.idioma = 'es';
 //
 //        // cargar estructura inicial de la página
@@ -106,8 +106,8 @@ Video.Pagina('Video.Pagina',
             },
 
             onComplete: function(id, fileName, responseJSON){
-
                 if (responseJSON.error) {
+                    alert(responseJSON.error);
                     $('.nuevo_form .archivo_status').html("<h5>ERROR: "+responseJSON.error).addClass('error').removeClass('success');
                     $('.qq-upload-fail').empty();
                 }
@@ -121,8 +121,6 @@ Video.Pagina('Video.Pagina',
             }
             // additional data to send, name-value pairs
         });
-
-
 
 //        modal.controller().original_hide = modal.controller().hide;
 //        modal.controller().hide = function(){
