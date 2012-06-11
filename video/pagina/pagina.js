@@ -90,7 +90,8 @@ $.Controller('Video.Pagina',
     busquedaSolicitada : function(btn) {
         if (btn.which == 13) {
             var consulta = $('#buscador input').val();
-            location.hash = $.route.url({vista: 'lista', v1: 'busqueda', v2: consulta });
+            location.hash = $.route.url({idioma: $(document).controller().idioma, vista: 'lista', v1: 'busqueda', v2: consulta });
+//            alert('s');
         }
 
 //        $.route.attrs({vista: 'lista', v1: 'busqueda', v2: consulta });
@@ -114,9 +115,9 @@ $.Controller('Video.Pagina',
                 this.element.find('#navegador').each(function() { $(this).css({opacity: 0.45}) });
                 return this.videoSeleccionado(ev, val, oldval);
 
-//            case this.constructor.vistas.busqueda.nombre:
-//                this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.3}) });
-//                return this.videoSeleccionado(ev, val, oldval);
+           // case this.constructor.vistas.busqueda.nombre:
+           //     this.element.find('#navegador, #lado').each(function() { $(this).css({opacity: 0.3}) });
+           //     return this.videoSeleccionado(ev, val, oldval);  
         }
     },
 
@@ -333,7 +334,7 @@ $.Controller('Video.Pagina',
         $('.grupos').css('opacity', 1);
 
         if (tipo_slug == 'busqueda') {
-            //tipo = tipo_slug;
+            tipo = tipo_slug;
             //titulo = 'teleSUR Video | Búsqueda: ' + $('#buscador input').val();
 
         } else {
