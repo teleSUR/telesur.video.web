@@ -591,7 +591,7 @@ $.Controller('Video.Navegador',
 
     'a.toggle_filtros click' : function(el, ev) {
         ev.preventDefault();
-
+                                       
         if ($('.video_filtrador').is(':visible')) {
             $('div.video_filtrador').remove();
             $('.grupos').css('opacity', 1);
@@ -600,7 +600,7 @@ $.Controller('Video.Navegador',
             $('.grupos').css('opacity', 0.4);
             var filtrador = $('<div />').video_filtrador();
             this.element.find('.menu_modos').append(filtrador);
-            filtrador.trigger('show');
+            filtrador.trigger('show'); 
         }
 
 

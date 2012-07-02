@@ -97,16 +97,16 @@ $.Controller('Video.Filtrador',
     'show' : function(){
         var that = this,
             tipo_slug = $(document).controller().tipo_slug;
-        $.each(this.constructor.filtros, function() {
+        $.each(this.constructor.filtros, function() {       
             if (this.tipos.indexOf(tipo_slug) > -1) {
                 if (tipo_slug == 'programa' && this.clase == 'programa') {
                     this.numPorPagina*= 3;
-                }
+                }                           
                 var template = (this.clase == 'fecha') ? '//video/filtrador/views/filtro_fecha.ejs' : '//video/filtrador/views/filtro.ejs';
                 var filtro = $('<div class="filtro '+ this.clase +'" />').html(template, {filtro: this});
                 filtro.data('filtro', this);
                 that.element.find('.filtros').append(filtro);
-                this.model.findAll({limit: this.numPorPagina}, that.callback(this.recibirCallback));
+                this.model.findAll({limit: this.numPorPagina}, that.callback(this.recibirCallback));   
             }
         })
     },
